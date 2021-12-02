@@ -16,18 +16,6 @@ Parameters:
     Default: iobatch-dev-s3
 Resources:
   # IAM User Groups
-  AdminGroup:
-    Type: AWS::IAM::Group
-    Properties:
-      GroupName: administrator-group
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-  EcrUserGroup:
-    Type: AWS::IAM::Group
-    Properties:
-      GroupName: ecr-user-group
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
   OpsGroup:
     Type: AWS::IAM::Group
     Properties:

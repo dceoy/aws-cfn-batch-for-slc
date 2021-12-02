@@ -15,12 +15,10 @@ Parameters:
     Type: String
     Default: awschatbot
 Resources:
-  # GuardDuty
   GuardDutyDetector:
     Type: AWS::GuardDuty::Detector
     Properties:
       Enable: true
-  # SNS
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
@@ -71,7 +69,6 @@ Resources:
       Targets:
         - Arn: !Ref SnsTopic
           Id: Id123
-  # Chatbot
   ChatbotConfiguration:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:

@@ -1,0 +1,16 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: AWS CloudFormation Template for IAM
+Resources:
+  AdminGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: administrator-group
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+  EcrUserGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: ecr-user-group
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser

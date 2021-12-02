@@ -23,7 +23,6 @@ Parameters:
     Type: String
     Default: awschatbot
 Resources:
-  # SNS
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
@@ -52,7 +51,6 @@ Resources:
       Targets:
         - Arn: !Ref SnsTopic
           Id: sns-topic
-  # Chatbot
   ChatbotConfiguration:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:
