@@ -2,18 +2,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: AWS CloudFormation Template for GuardDuty
 Parameters:
-  TopicName:
+  SnsTopicName:
     Description: SNS Topic Name.
     Type: String
-    Default: GuardDutyDetector
-  SlackWorkspaceId:
-    Description: Slack Workspace ID.
-    Type: String
-    Default: workspace
-  SlackChannelId:
-    Description: Slack Channel ID.
-    Type: String
-    Default: awschatbot
+    Default: guardduty-finding-topic
 Resources:
   GuardDutyDetector:
     Type: AWS::GuardDuty::Detector
@@ -22,7 +14,7 @@ Resources:
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub ${TopicName}-topic
+      TopicName: !Sub ${SnsTopicName}-topic
   SnsTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
@@ -60,7 +52,7 @@ Resources:
   EventRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub ${TopicName}-rule
+      Name: !Sub ${SnsTopicName}-rule
       EventPattern:
         source:
           - aws.guardduty
@@ -69,13 +61,3 @@ Resources:
       Targets:
         - Arn: !Ref SnsTopic
           Id: Id123
-  ChatbotConfiguration:
-    Type: AWS::Chatbot::SlackChannelConfiguration
-    Properties:
-      ConfigurationName: !Sub ${TopicName}-chatbot-config
-      IamRoleArn: arn:aws:iam::123456789012:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
-      LoggingLevel: NONE
-      SlackChannelId: !Ref SlackChannelId
-      SlackWorkspaceId: !Ref SlackWorkspaceId
-      SnsTopicArns:
-        - !Ref SnsTopic

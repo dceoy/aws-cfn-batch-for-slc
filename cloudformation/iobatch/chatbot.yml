@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: AWS CloudFormation Template for SNS and Chatbot
+Description: AWS CloudFormation Template for Chatbot
 Parameters:
   SystemName:
     Description: System Name.
