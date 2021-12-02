@@ -22,12 +22,11 @@ Resources:
   # EC2 Security Group
   Ec2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    DeletionPolicy: Retain
     Properties:
       GroupName: !Sub ${SystemName}-${EnvType}-ec2-security-group
       GroupDescription: !Sub ${SystemName}-${EnvType}-ec2-security-group
       VpcId:
-        'Fn::ImportValue': !Sub ${VpcStackName}-Vpc
+        Fn::ImportValue: !Sub ${VpcStackName}-Vpc
       Tags:
         - Key: Name
           Value: !Sub ${SystemName}-${EnvType}-ec2-security-group
@@ -57,11 +56,11 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: FARGATE_SPOT
         Subnets:
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet1
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet2
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
       ServiceRole:
-        'Fn::ImportValue': !Sub ${IAMStackName}-Ec2ServiceRole
+        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2Graviton:
     Type: AWS::Batch::ComputeEnvironment
@@ -76,24 +75,23 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateId:
-            'Fn::ImportValue': !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet1
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet2
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
         MinvCpus: 0
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          'Fn::ImportValue': !Sub ${IAMStackName}-BatchInstanceProfile
+          Fn::ImportValue: !Sub ${IAMStackName}-BatchInstanceProfile
         InstanceTypes:
           - c6g
           - m6g
           - r6g
       ServiceRole:
-        'Fn::ImportValue': !Sub ${IAMStackName}-Ec2ServiceRole
+        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2Intel:
     Type: AWS::Batch::ComputeEnvironment
@@ -108,24 +106,23 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateId:
-            'Fn::ImportValue': !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet1
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet2
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
         MinvCpus: 0
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          'Fn::ImportValue': !Sub ${IAMStackName}-BatchInstanceProfile
+          Fn::ImportValue: !Sub ${IAMStackName}-BatchInstanceProfile
         InstanceTypes:
-          - c6i
           - m6i
+          - c5
           - r5
       ServiceRole:
-        'Fn::ImportValue': !Sub ${IAMStackName}-Ec2ServiceRole
+        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2Nvidia:
     Type: AWS::Batch::ComputeEnvironment
@@ -140,23 +137,27 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateId:
-            'Fn::ImportValue': !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet1
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet2
-          - 'Fn::ImportValue': !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
         MinvCpus: 0
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          'Fn::ImportValue': !Sub ${IAMStackName}-BatchInstanceProfile
+          Fn::ImportValue: !Sub ${IAMStackName}-BatchInstanceProfile
         InstanceTypes:
-          - p4
-          - g4dn
+          - p4d
+          - g4dn.xlarge
+          - g4dn.2xlarge
+          - g4dn.4xlarge
+          - g4dn.8xlarge
+          - g4dn.12xlarge
+          - g4dn.16xlarge
       ServiceRole:
-        'Fn::ImportValue': !Sub ${IAMStackName}-Ec2ServiceRole
+        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
       State: ENABLED
   # Batch Job Queues
   BatchJobQueueFargate:
@@ -164,7 +165,7 @@ Resources:
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref ComputeEnvironment
+          ComputeEnvironment: !Ref BatchComputeEnvironmentFargate
       JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate
       Priority: 1
       State: ENABLED

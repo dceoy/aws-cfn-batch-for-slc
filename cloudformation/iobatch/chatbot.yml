@@ -17,9 +17,11 @@ Parameters:
   SlackWorkspaceId:
     Description: Slack Workspace ID.
     Type: String
+    Default: XXXXXXXXX
   SlackChannelId:
     Description: Slack Channel ID.
     Type: String
+    Default: awschatbot
 Resources:
   SnsTopic:
     Type: AWS::SNS::Topic

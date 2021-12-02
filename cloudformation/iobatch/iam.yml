@@ -129,30 +129,30 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Resource:
-                  'Fn::Join':
+                  Fn::Join:
                     - ''
-                    - - 'arn:aws:s3:::'
-                      - 'Fn::ImportValue': !Sub ${S3StackName}-InputBucket
+                    - - arn:aws:s3:::
+                      - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
                       - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
                   - s3:List*
               - Resource:
-                  'Fn::Join':
+                  Fn::Join:
                     - ''
-                    - - 'arn:aws:s3:::'
-                      - 'Fn::ImportValue': !Sub ${S3StackName}-ReferenceBucket
+                    - - arn:aws:s3:::
+                      - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
                       - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
                   - s3:List*
               - Resource:
-                  'Fn::Join':
+                  Fn::Join:
                     - ''
-                    - - 'arn:aws:s3:::'
-                      - 'Fn::ImportValue': !Sub ${S3StackName}-OutputBucket
+                    - - arn:aws:s3:::
+                      - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
                       - /*
                 Effect: Allow
                 Action:
@@ -160,10 +160,10 @@ Resources:
                   - s3:List*
                   - s3:PutObject
               - Resource:
-                  'Fn::Join':
+                  Fn::Join:
                     - ''
-                    - - 'arn:aws:s3:::'
-                      - 'Fn::ImportValue': !Sub ${S3StackName}-ArchiveBucket
+                    - - arn:aws:s3:::
+                      - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
                       - /*
                 Effect: Allow
                 Action:
