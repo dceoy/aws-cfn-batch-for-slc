@@ -1,0 +1,84 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: AWS CloudFormation Template for GuardDuty
+Parameters:
+  TopicName:
+    Description: SNS Topic Name.
+    Type: String
+    Default: GuardDutyDetector
+  SlackWorkspaceId:
+    Description: Slack Workspace ID.
+    Type: String
+    Default: workspace
+  SlackChannelId:
+    Description: Slack Channel ID.
+    Type: String
+    Default: awschatbot
+Resources:
+  # GuardDuty
+  GuardDutyDetector:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+  # SNS
+  SnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${TopicName}-topic
+  SnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: default_policy_ID
+        Version: 2012-10-17
+        Statement:
+          - Sid: default_statement_ID
+            Effect: Allow
+            Principal:
+              AWS: '*'
+            Action:
+              - SNS:GetTopicAttributes
+              - SNS:SetTopicAttributes
+              - SNS:AddPermission
+              - SNS:RemovePermission
+              - SNS:DeleteTopic
+              - SNS:Subscribe
+              - SNS:ListSubscriptionsByTopic
+              - SNS:Publish
+              - SNS:Receive
+            Resource: !Ref SnsTopic
+            Condition:
+              StringEquals:
+                'AWS:SourceOwner': !Ref AWS::AccountId
+          - Sid: AWSEvents_AlertGuardDutyFindings_Id123
+            Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref SnsTopic
+      Topics:
+        - !Ref SnsTopic
+  EventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ${TopicName}-rule
+      EventPattern:
+        source:
+          - aws.guardduty
+        detail-type:
+          - GuardDuty Finding
+      Targets:
+        - Arn: !Ref SnsTopic
+          Id: Id123
+  # Chatbot
+  ChatbotConfiguration:
+    Type: AWS::Chatbot::SlackChannelConfiguration
+    Properties:
+      ConfigurationName: !Sub ${TopicName}-chatbot-config
+      IamRoleArn: arn:aws:iam::123456789012:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
+      LoggingLevel: NONE
+      SlackChannelId: !Ref SlackChannelId
+      SlackWorkspaceId: !Ref SlackWorkspaceId
+      SnsTopicArns:
+        - !Ref SnsTopic

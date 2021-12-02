@@ -13,7 +13,7 @@ Parameters:
   IAMStackName:
     Description: IAM Stack Name.
     Type: String
-    Default: iobatch-dev-iam-role
+    Default: iobatch-dev-iam
   VpcStackName:
     Description: Vpc Stack Name.
     Type: String

@@ -21,7 +21,7 @@ Parameters:
   SlackChannelId:
     Description: Slack Channel ID.
     Type: String
-    Default: aws
+    Default: awschatbot
 Resources:
   # SNS
   SnsTopic:
