@@ -14,45 +14,25 @@ Resources:
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub ${SnsTopicName}-topic
+      TopicName: !Ref SnsTopicName
   SnsTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
       PolicyDocument:
-        Id: default_policy_ID
         Version: 2012-10-17
         Statement:
-          - Sid: default_statement_ID
-            Effect: Allow
-            Principal:
-              AWS: '*'
-            Action:
-              - SNS:GetTopicAttributes
-              - SNS:SetTopicAttributes
-              - SNS:AddPermission
-              - SNS:RemovePermission
-              - SNS:DeleteTopic
-              - SNS:Subscribe
-              - SNS:ListSubscriptionsByTopic
-              - SNS:Publish
-              - SNS:Receive
-            Resource: !Ref SnsTopic
-            Condition:
-              StringEquals:
-                'AWS:SourceOwner': !Ref AWS::AccountId
-          - Sid: AWSEvents_AlertGuardDutyFindings_Id123
-            Effect: Allow
+          - Effect: Allow
             Principal:
               Service:
                 - events.amazonaws.com
             Action: sns:Publish
-            Resource: !Ref SnsTopic
+            Resource: '*'
       Topics:
         - !Ref SnsTopic
   EventRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub ${SnsTopicName}-rule
+      Name: !Sub ${SnsTopicName}-event-rule
       EventPattern:
         source:
           - aws.guardduty
@@ -60,4 +40,4 @@ Resources:
           - GuardDuty Finding
       Targets:
         - Arn: !Ref SnsTopic
-          Id: Id123
+          Id: sns-topic

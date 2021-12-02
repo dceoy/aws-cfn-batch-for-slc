@@ -13,20 +13,18 @@ Parameters:
   TopicName:
     Description: SNS Topic Name.
     Type: String
-    Default: BatchNotification
+    Default: batch-topic
   SlackWorkspaceId:
     Description: Slack Workspace ID.
     Type: String
-    Default: workspace
   SlackChannelId:
     Description: Slack Channel ID.
     Type: String
-    Default: awschatbot
 Resources:
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub ${SystemName}-${EnvType}-${TopicName}-topic
+      TopicName: !Sub ${SystemName}-${EnvType}-${TopicName}
   SnsTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
@@ -44,7 +42,7 @@ Resources:
   EventRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub ${SystemName}-${EnvType}-${TopicName}-rule
+      Name: !Sub ${SystemName}-${EnvType}-${TopicName}-event-rule
       EventPattern:
         source:
           - aws.batch

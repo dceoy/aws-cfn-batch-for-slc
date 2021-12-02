@@ -9,16 +9,14 @@ Parameters:
   SlackWorkspaceId:
     Description: Slack Workspace ID.
     Type: String
-    Default: workspace
   SlackChannelId:
     Description: Slack Channel ID.
     Type: String
-    Default: awschatbot
 Resources:
   ChatbotConfiguration:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:
-      ConfigurationName: guardduty-finding-chatbot-config
+      ConfigurationName: !Sub ${SnsTopicName}-chatbot-config
       IamRoleArn: arn:aws:iam::123456789012:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
       LoggingLevel: NONE
       SlackChannelId: !Ref SlackChannelId
@@ -28,8 +26,6 @@ Resources:
         - !Sub arn:aws:sns:us-east-2:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:us-west-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:us-west-2:${AWS::AccountId}:${SnsTopicName}
-        - !Sub arn:aws:sns:af-south-1:${AWS::AccountId}:${SnsTopicName}
-        - !Sub arn:aws:sns:ap-east-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:ap-south-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:ap-northeast-3:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:ap-northeast-2:${AWS::AccountId}:${SnsTopicName}
@@ -40,8 +36,10 @@ Resources:
         - !Sub arn:aws:sns:eu-central-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:eu-west-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:eu-west-2:${AWS::AccountId}:${SnsTopicName}
-        - !Sub arn:aws:sns:eu-south-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:eu-west-3:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:eu-north-1:${AWS::AccountId}:${SnsTopicName}
-        - !Sub arn:aws:sns:me-south-1:${AWS::AccountId}:${SnsTopicName}
         - !Sub arn:aws:sns:sa-east-1:${AWS::AccountId}:${SnsTopicName}
+        # - !Sub arn:aws:sns:af-south-1:${AWS::AccountId}:${SnsTopicName}
+        # - !Sub arn:aws:sns:ap-east-1:${AWS::AccountId}:${SnsTopicName}
+        # - !Sub arn:aws:sns:eu-south-1:${AWS::AccountId}:${SnsTopicName}
+        # - !Sub arn:aws:sns:me-south-1:${AWS::AccountId}:${SnsTopicName}
