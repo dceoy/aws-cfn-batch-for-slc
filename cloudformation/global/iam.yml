@@ -2,12 +2,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: AWS CloudFormation Template for IAM
 Resources:
-  AdminGroup:
-    Type: AWS::IAM::Group
-    Properties:
-      GroupName: administrator-group
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess
   CiGroup:
     Type: AWS::IAM::Group
     Properties:
