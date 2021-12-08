@@ -8,9 +8,49 @@ Resources:
       GroupName: administrator-group
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AdministratorAccess
-  EcrUserGroup:
+  CiGroup:
     Type: AWS::IAM::Group
     Properties:
-      GroupName: ecr-user-group
+      GroupName: ci-group
+      Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+      Policies:
+        - PolicyName: ci-batch-job-definition-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - batch:DeregisterJobDefinition
+                  - batch:DescribeJobDefinitions
+                  - batch:RegisterJobDefinition
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - ecs-tasks.amazonaws.com
+        - PolicyName: ci-ecs-task-definition-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - ecs:DeregisterTaskDefinition
+                  - ecs:DescribeTaskDefinition
+                  - ecs:ListTaskDefinitionFamilies
+                  - ecs:ListTaskDefinitions
+                  - ecs:RegisterTaskDefinition
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - ecs-tasks.amazonaws.com
