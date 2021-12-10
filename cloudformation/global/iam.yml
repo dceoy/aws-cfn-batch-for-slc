@@ -10,6 +10,19 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
       Policies:
+        - PolicyName: ci-ecr-repository-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - ecr:CreateRepository
+                  - ecr:DeleteRepository
+                  - ecr:DeleteRepositoryPolicy
+                  - ecr:DescribeRepositories
+                  - ecr:GetRepositoryPolicy
+                  - ecr:SetRepositoryPolicy
         - PolicyName: ci-batch-job-definition-policy
           PolicyDocument:
             Version: 2012-10-17
