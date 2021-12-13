@@ -61,3 +61,30 @@ Resources:
                   StringEqualsIfExists:
                     iam:PassedToService:
                       - ecs-tasks.amazonaws.com
+  DevGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: batch-developer-group
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+      Policies:
+        - PolicyName: batch-developer-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - batch:Describe*
+                  - batch:List*
+                  - batch:RegisterJobDefinition
+                  - batch:DeregisterJobDefinition
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - ecs-tasks.amazonaws.com

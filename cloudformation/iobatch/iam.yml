@@ -67,33 +67,6 @@ Resources:
                   - s3:List*
                   - s3:*Object*
                   - s3:*MultipartUpload*
-  DevGroup:
-    Type: AWS::IAM::Group
-    Properties:
-      GroupName: !Sub ${SystemName}-${EnvType}-developer-group
-      Path: /
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
-      Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-developer-batch-policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Resource: '*'
-                Effect: Allow
-                Action:
-                  - batch:Describe*
-                  - batch:List*
-                  - batch:RegisterJobDefinition
-                  - batch:DeregisterJobDefinition
-              - Resource: '*'
-                Effect: Allow
-                Action:
-                  - iam:PassRole
-                Condition:
-                  StringEqualsIfExists:
-                    iam:PassedToService:
-                      - ecs-tasks.amazonaws.com
   # IAM Roles
   BatchServiceRole:
     Type: AWS::IAM::Role
@@ -131,9 +104,8 @@ Resources:
               - Resource:
                   Fn::Join:
                     - ''
-                    - - arn:aws:s3:::
+                    - - 'arn:aws:s3:::'
                       - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
-                      - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
@@ -141,9 +113,8 @@ Resources:
               - Resource:
                   Fn::Join:
                     - ''
-                    - - arn:aws:s3:::
+                    - - 'arn:aws:s3:::'
                       - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
-                      - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
@@ -151,9 +122,8 @@ Resources:
               - Resource:
                   Fn::Join:
                     - ''
-                    - - arn:aws:s3:::
+                    - - 'arn:aws:s3:::'
                       - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
-                      - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
@@ -162,9 +132,8 @@ Resources:
               - Resource:
                   Fn::Join:
                     - ''
-                    - - arn:aws:s3:::
+                    - - 'arn:aws:s3:::'
                       - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
-                      - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
