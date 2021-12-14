@@ -102,38 +102,47 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Resource:
-                  Fn::Join:
-                    - ''
-                    - - 'arn:aws:s3:::'
-                      - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                        - /*
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
+                        - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
                   - s3:List*
               - Resource:
-                  Fn::Join:
-                    - ''
-                    - - 'arn:aws:s3:::'
-                      - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
-                Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-              - Resource:
-                  Fn::Join:
-                    - ''
-                    - - 'arn:aws:s3:::'
-                      - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
-                Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                  - s3:PutObject
-              - Resource:
-                  Fn::Join:
-                    - ''
-                    - - 'arn:aws:s3:::'
-                      - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - /*
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
