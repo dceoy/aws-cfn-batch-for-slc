@@ -85,7 +85,7 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IAMStackName}-BatchInstanceProfile
+          Fn::ImportValue: !Sub ${IAMStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - c6g
           - m6g
@@ -116,7 +116,7 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IAMStackName}-BatchInstanceProfile
+          Fn::ImportValue: !Sub ${IAMStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
           - c5
@@ -147,7 +147,7 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${IAMStackName}-BatchInstanceProfile
+          Fn::ImportValue: !Sub ${IAMStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - p4d
           - g4dn.xlarge

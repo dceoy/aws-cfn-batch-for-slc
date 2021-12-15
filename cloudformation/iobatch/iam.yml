@@ -163,10 +163,10 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-  BatchInstanceRole:
+  BatchEc2InstanceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-BatchInstanceRole
+      RoleName: !Sub ${SystemName}-${EnvType}-BatchEc2InstanceRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -178,12 +178,13 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
-  BatchInstanceProfile:
+        - arn:aws:iam::aws:policy/aws-service-role/AWSEC2SpotServiceRolePolicy
+  BatchEc2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
-        - Ref: BatchInstanceRole
+        - Ref: BatchEc2InstanceRole
 Outputs:
   BatchServiceRole:
     Value: !GetAtt BatchServiceRole.Arn
@@ -200,13 +201,13 @@ Outputs:
     Description: BatchJobExecutionRole
     Export:
       Name: !Sub ${AWS::StackName}-BatchJobExecutionRole
-  BatchInstanceRole:
-    Value: !GetAtt BatchInstanceRole.Arn
-    Description: BatchInstanceRole
+  BatchEc2InstanceRole:
+    Value: !GetAtt BatchEc2InstanceRole.Arn
+    Description: BatchEc2InstanceRole
     Export:
-      Name: !Sub ${AWS::StackName}-BatchInstanceRole
-  BatchInstanceProfile:
-    Value: !GetAtt BatchInstanceProfile.Arn
-    Description: BatchInstanceProfile
+      Name: !Sub ${AWS::StackName}-BatchEc2InstanceRole
+  BatchEc2InstanceProfile:
+    Value: !GetAtt BatchEc2InstanceProfile.Arn
+    Description: BatchEc2InstanceProfile
     Export:
-      Name: !Sub ${AWS::StackName}-BatchInstanceProfile
+      Name: !Sub ${AWS::StackName}-BatchEc2InstanceProfile
