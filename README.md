@@ -19,23 +19,7 @@ Installation
 
 3.  Set Slack client on AWS Chatbot and get Slack workspace ID.
 
-4.  Deploy stacks for batch environments.
-
-    ```sh
-    $ rain deploy cloudformation/iobatch/vpc.yml iobatch-prd-vpc
-    $ rain deploy cloudformation/iobatch/s3.yml iobatch-prd-s3
-    $ rain deploy cloudformation/iobatch/iam.yml iobatch-prd-iam
-    $ rain deploy cloudformation/iobatch/chatbot.yml iobatch-prd-chatbot
-    $ rain deploy cloudformation/iobatch/batch.yml iobatch-prd-batch
-    ```
-
-5.  Deploy stacks for global configurations. (optional)
-
-    ```sh
-    $ rain deploy cloudformation/global/iam.yml global-iam
-    ```
-
-6.  Deploy stacks for Amazon GuardDuty. (optional)
+4.  Deploy stacks for Amazon GuardDuty. (optional)
 
     i.    Create IAM roles for CloudFormation StackSets.
 
@@ -45,4 +29,20 @@ Installation
 
     ```sh
     $ rain deploy cloudformation/global/chatbot.yml global-chatbot
+    ```
+
+5.  Deploy stacks for global configurations. (optional)
+
+    ```sh
+    $ rain deploy cloudformation/global/iam.yml global-iam
+    ```
+
+6.  Deploy stacks for batch environments.
+
+    ```sh
+    $ rain deploy cloudformation/iobatch/chatbot.yml iobatch-prd-chatbot
+    $ rain deploy cloudformation/iobatch/vpc.yml iobatch-prd-vpc
+    $ rain deploy cloudformation/iobatch/s3.yml iobatch-prd-s3
+    $ rain deploy cloudformation/iobatch/iam.yml iobatch-prd-iam
+    $ rain deploy cloudformation/iobatch/batch.yml iobatch-prd-batch
     ```
