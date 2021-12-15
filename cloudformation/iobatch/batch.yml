@@ -45,7 +45,7 @@ Resources:
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
   # Batch Compute Environments
-  BatchComputeEnvironmentFargate:
+  BatchComputeEnvironmentFargateSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
@@ -62,7 +62,7 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
-  BatchComputeEnvironmentEc2Graviton:
+  BatchComputeEnvironmentEc2GravitonSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
@@ -75,7 +75,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateId: !Ref Ec2LaunchTemplate
+          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
@@ -86,6 +86,7 @@ Resources:
           - ImageType: ECS_AL2
         InstanceRole:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+        SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - c6g
           - m6g
@@ -93,7 +94,7 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
-  BatchComputeEnvironmentEc2Intel:
+  BatchComputeEnvironmentEc2IntelSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
@@ -106,7 +107,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateId: !Ref Ec2LaunchTemplate
+          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
@@ -117,6 +118,7 @@ Resources:
           - ImageType: ECS_AL2
         InstanceRole:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+        SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - m6i
           - c5
@@ -124,7 +126,7 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
-  BatchComputeEnvironmentEc2Nvidia:
+  BatchComputeEnvironmentEc2NvidiaSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
@@ -137,7 +139,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateId: !Ref Ec2LaunchTemplate
+          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
@@ -148,6 +150,7 @@ Resources:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+        SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - p4d
           - g4dn.xlarge
@@ -160,39 +163,39 @@ Resources:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
   # Batch Job Queues
-  BatchJobQueueFargate:
+  BatchJobQueueFargateSpot:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref BatchComputeEnvironmentFargate
+          ComputeEnvironment: !Ref BatchComputeEnvironmentFargateSpot
       JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate
       Priority: 1
       State: ENABLED
-  BatchJobQueueEc2Graviton:
+  BatchJobQueueEc2GravitonSpot:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2Graviton
+          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonSpot
       JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-graviton
       Priority: 1
       State: ENABLED
-  BatchJobQueueEc2Intel:
+  BatchJobQueueEc2IntelSpot:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2Intel
+          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelSpot
       JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-intel
       Priority: 1
       State: ENABLED
-  BatchJobQueueEc2Nvidia:
+  BatchJobQueueEc2NvidiaSpot:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2Nvidia
+          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaSpot
       JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-nvidia
       Priority: 1
       State: ENABLED
@@ -205,35 +208,35 @@ Outputs:
     Value: !Ref Ec2LaunchTemplate
     Export:
       Name: !Sub ${AWS::StackName}-Ec2LaunchTemplate
-  BatchComputeEnvironmentFargate:
-    Value: !Ref BatchComputeEnvironmentFargate
+  BatchComputeEnvironmentFargateSpot:
+    Value: !Ref BatchComputeEnvironmentFargateSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentFargate
-  BatchComputeEnvironmentEc2Graviton:
-    Value: !Ref BatchComputeEnvironmentEc2Graviton
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentFargateSpot
+  BatchComputeEnvironmentEc2GravitonSpot:
+    Value: !Ref BatchComputeEnvironmentEc2GravitonSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2Graviton
-  BatchComputeEnvironmentEc2Intel:
-    Value: !Ref BatchComputeEnvironmentEc2Intel
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2GravitonSpot
+  BatchComputeEnvironmentEc2IntelSpot:
+    Value: !Ref BatchComputeEnvironmentEc2IntelSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2Intel
-  BatchComputeEnvironmentEc2Nvidia:
-    Value: !Ref BatchComputeEnvironmentEc2Nvidia
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2IntelSpot
+  BatchComputeEnvironmentEc2NvidiaSpot:
+    Value: !Ref BatchComputeEnvironmentEc2NvidiaSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2Nvidia
-  BatchJobQueueFargate:
-    Value: !Ref BatchJobQueueFargate
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaSpot
+  BatchJobQueueFargateSpot:
+    Value: !Ref BatchJobQueueFargateSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueFargate
-  BatchJobQueueEc2Graviton:
-    Value: !Ref BatchJobQueueEc2Graviton
+      Name: !Sub ${AWS::StackName}-BatchJobQueueFargateSpot
+  BatchJobQueueEc2GravitonSpot:
+    Value: !Ref BatchJobQueueEc2GravitonSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2Graviton
-  BatchJobQueueEc2Intel:
-    Value: !Ref BatchJobQueueEc2Intel
+      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2GravitonSpot
+  BatchJobQueueEc2IntelSpot:
+    Value: !Ref BatchJobQueueEc2IntelSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2Intel
-  BatchJobQueueEc2Nvidia:
-    Value: !Ref BatchJobQueueEc2Nvidia
+      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2IntelSpot
+  BatchJobQueueEc2NvidiaSpot:
+    Value: !Ref BatchJobQueueEc2NvidiaSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2Nvidia
+      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2NvidiaSpot

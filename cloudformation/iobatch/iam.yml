@@ -176,6 +176,20 @@ Resources:
                 - ec2.amazonaws.com
             Action:
               - sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub ${SystemName}-${EnvType}-BatchEBS-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              Effect: Allow
+              Action:
+                - ec2:createTags
+                - ec2:createVolume
+                - ec2:attachVolume
+                - ec2:deleteVolume
+                - ec2:modifyInstanceAttribute
+                - ec2:describeVolumes
+              Resource: '*'
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
   BatchEc2InstanceProfile:
@@ -184,6 +198,20 @@ Resources:
       Path: /
       Roles:
         - Ref: BatchEc2InstanceRole
+  BatchSpotFleetRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - spotfleet.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole
 Outputs:
   BatchServiceRole:
     Value: !GetAtt BatchServiceRole.Arn
@@ -210,3 +238,8 @@ Outputs:
     Description: BatchEc2InstanceProfile
     Export:
       Name: !Sub ${AWS::StackName}-BatchEc2InstanceProfile
+  BatchSpotFleetRole:
+    Value: !GetAtt BatchSpotFleetRole.Arn
+    Description: BatchSpotFleetRole
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchSpotFleetRole
