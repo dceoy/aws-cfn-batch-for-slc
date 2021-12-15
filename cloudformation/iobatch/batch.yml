@@ -10,7 +10,7 @@ Parameters:
     Description: Environment Type.
     Type: String
     Default: prd
-  IAMStackName:
+  IamStackName:
     Description: IAM Stack Name.
     Type: String
     Default: iobatch-prd-iam
@@ -51,7 +51,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate
       ComputeResources:
-        MaxvCpus: 512
+        MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: FARGATE_SPOT
@@ -60,7 +60,7 @@ Resources:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
       ServiceRole:
-        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2Graviton:
     Type: AWS::Batch::ComputeEnvironment
@@ -70,7 +70,7 @@ Resources:
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
-        MaxvCpus: 512
+        MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: SPOT
@@ -85,13 +85,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IAMStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - c6g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2Intel:
     Type: AWS::Batch::ComputeEnvironment
@@ -101,7 +101,7 @@ Resources:
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
-        MaxvCpus: 512
+        MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: SPOT
@@ -116,13 +116,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IAMStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
           - c5
           - r5
       ServiceRole:
-        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2Nvidia:
     Type: AWS::Batch::ComputeEnvironment
@@ -132,7 +132,7 @@ Resources:
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
-        MaxvCpus: 512
+        MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: SPOT
@@ -147,7 +147,7 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${IAMStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - p4d
           - g4dn.xlarge
@@ -157,7 +157,7 @@ Resources:
           - g4dn.12xlarge
           - g4dn.16xlarge
       ServiceRole:
-        Fn::ImportValue: !Sub ${IAMStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
   # Batch Job Queues
   BatchJobQueueFargate:
@@ -197,6 +197,10 @@ Resources:
       Priority: 1
       State: ENABLED
 Outputs:
+  Ec2SecurityGroup:
+    Value: !Ref Ec2SecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-Ec2SecurityGroup
   Ec2LaunchTemplate:
     Value: !Ref Ec2LaunchTemplate
     Export:

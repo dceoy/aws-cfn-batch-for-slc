@@ -178,7 +178,6 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
-        - arn:aws:iam::aws:policy/aws-service-role/AWSEC2SpotServiceRolePolicy
   BatchEc2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:

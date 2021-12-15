@@ -23,7 +23,7 @@ jobs:
           node-version: '10.x'
       - name: Install commands
         run: |
-          python -m pip install --upgrade --no-cache-dir yamllint
+          python -m pip install --upgrade --no-cache-dir cfn-lint yamllint
           npm install -g jsonlint
       - name: Execute jsonlint
         run: |
@@ -33,3 +33,7 @@ jobs:
         run: |
           find * -type f -name '*.yml' -o -name '*.yaml' \
             | xargs -t yamllint -d '{"extends": "relaxed", "rules": {"line-length": "disable"}}'
+      - name: Execute cfn-lint
+        run: |
+          find cloudformation -type f -name '*.yml' -o -name '*.yaml' \
+            | xargs -t -i cfn-lint --template {}
