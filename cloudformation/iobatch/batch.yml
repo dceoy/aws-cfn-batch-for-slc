@@ -44,12 +44,12 @@ Resources:
               Encrypted: true
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
-  # Batch Compute Environments
+  # Batch Compute Environments (Spot)
   BatchComputeEnvironmentFargateSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate-spot
       ComputeResources:
         MaxvCpus: 1024
         SecurityGroupIds:
@@ -66,10 +66,11 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton-spot
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
+        MinvCpus: 0
         MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
@@ -81,7 +82,6 @@ Resources:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
-        MinvCpus: 0
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -98,10 +98,11 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel-spot
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
+        MinvCpus: 0
         MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
@@ -113,7 +114,6 @@ Resources:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
-        MinvCpus: 0
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -130,10 +130,11 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia-spot
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
+        MinvCpus: 0
         MaxvCpus: 1024
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
@@ -145,7 +146,6 @@ Resources:
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
           - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
-        MinvCpus: 0
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
@@ -162,14 +162,14 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
-  # Batch Job Queues
+  # Batch Job Queues (Spot)
   BatchJobQueueFargateSpot:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentFargateSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2GravitonSpot:
@@ -178,7 +178,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-graviton
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-graviton-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2IntelSpot:
@@ -187,7 +187,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-intel
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-intel-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2NvidiaSpot:
@@ -196,7 +196,156 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-nvidia
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-nvidia-spot
+      Priority: 1
+      State: ENABLED
+  # Batch Compute Environments (OnDemand)
+  BatchComputeEnvironmentFargateOnDemand:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      Type: MANAGED
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate-ondemand
+      ComputeResources:
+        MaxvCpus: 1024
+        SecurityGroupIds:
+          - !Ref Ec2SecurityGroup
+        Type: FARGATE
+        Subnets:
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+      ServiceRole:
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+      State: ENABLED
+  BatchComputeEnvironmentEc2GravitonOnDemand:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      Type: MANAGED
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton-ondemand
+      ComputeResources:
+        AllocationStrategy: BEST_FIT
+        MinvCpus: 0
+        MaxvCpus: 1024
+        SecurityGroupIds:
+          - !Ref Ec2SecurityGroup
+        Type: EC2
+        LaunchTemplate:
+          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          Version: $Latest
+        Subnets:
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+        Ec2Configuration:
+          - ImageType: ECS_AL2
+        InstanceRole:
+          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+        InstanceTypes:
+          - c6g
+          - m6g
+          - r6g
+      ServiceRole:
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+      State: ENABLED
+  BatchComputeEnvironmentEc2IntelOnDemand:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      Type: MANAGED
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel-ondemand
+      ComputeResources:
+        AllocationStrategy: BEST_FIT
+        MinvCpus: 0
+        MaxvCpus: 1024
+        SecurityGroupIds:
+          - !Ref Ec2SecurityGroup
+        Type: EC2
+        LaunchTemplate:
+          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          Version: $Latest
+        Subnets:
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+        Ec2Configuration:
+          - ImageType: ECS_AL2
+        InstanceRole:
+          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+        InstanceTypes:
+          - m6i
+          - c5
+          - r5
+      ServiceRole:
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+      State: ENABLED
+  BatchComputeEnvironmentEc2NvidiaOnDemand:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      Type: MANAGED
+      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia-ondemand
+      ComputeResources:
+        AllocationStrategy: BEST_FIT
+        MinvCpus: 0
+        MaxvCpus: 1024
+        SecurityGroupIds:
+          - !Ref Ec2SecurityGroup
+        Type: EC2
+        LaunchTemplate:
+          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          Version: $Latest
+        Subnets:
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
+          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+        Ec2Configuration:
+          - ImageType: ECS_AL2_NVIDIA
+        InstanceRole:
+          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+        InstanceTypes:
+          - p4d
+          - g4dn.xlarge
+          - g4dn.2xlarge
+          - g4dn.4xlarge
+          - g4dn.8xlarge
+          - g4dn.12xlarge
+          - g4dn.16xlarge
+      ServiceRole:
+        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+      State: ENABLED
+  # Batch Job Queues (OnDemand)
+  BatchJobQueueFargateOnDemand:
+    Type: AWS::Batch::JobQueue
+    Properties:
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment: !Ref BatchComputeEnvironmentFargateOnDemand
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate-ondemand
+      Priority: 1
+      State: ENABLED
+  BatchJobQueueEc2GravitonOnDemand:
+    Type: AWS::Batch::JobQueue
+    Properties:
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonOnDemand
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-graviton-ondemand
+      Priority: 1
+      State: ENABLED
+  BatchJobQueueEc2IntelOnDemand:
+    Type: AWS::Batch::JobQueue
+    Properties:
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelOnDemand
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-intel-ondemand
+      Priority: 1
+      State: ENABLED
+  BatchJobQueueEc2NvidiaOnDemand:
+    Type: AWS::Batch::JobQueue
+    Properties:
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaOnDemand
+      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-nvidia-ondemand
       Priority: 1
       State: ENABLED
 Outputs:
@@ -240,3 +389,35 @@ Outputs:
     Value: !Ref BatchJobQueueEc2NvidiaSpot
     Export:
       Name: !Sub ${AWS::StackName}-BatchJobQueueEc2NvidiaSpot
+  BatchComputeEnvironmentFargateOnDemand:
+    Value: !Ref BatchComputeEnvironmentFargateOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentFargateOnDemand
+  BatchComputeEnvironmentEc2GravitonOnDemand:
+    Value: !Ref BatchComputeEnvironmentEc2GravitonOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2GravitonOnDemand
+  BatchComputeEnvironmentEc2IntelOnDemand:
+    Value: !Ref BatchComputeEnvironmentEc2IntelOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2IntelOnDemand
+  BatchComputeEnvironmentEc2NvidiaOnDemand:
+    Value: !Ref BatchComputeEnvironmentEc2NvidiaOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaOnDemand
+  BatchJobQueueFargateOnDemand:
+    Value: !Ref BatchJobQueueFargateOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchJobQueueFargateOnDemand
+  BatchJobQueueEc2GravitonOnDemand:
+    Value: !Ref BatchJobQueueEc2GravitonOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2GravitonOnDemand
+  BatchJobQueueEc2IntelOnDemand:
+    Value: !Ref BatchJobQueueEc2IntelOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2IntelOnDemand
+  BatchJobQueueEc2NvidiaOnDemand:
+    Value: !Ref BatchJobQueueEc2NvidiaOnDemand
+    Export:
+      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2NvidiaOnDemand
