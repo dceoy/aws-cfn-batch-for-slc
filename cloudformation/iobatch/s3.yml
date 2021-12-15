@@ -9,7 +9,7 @@ Parameters:
   EnvType:
     Description: Environment Type.
     Type: String
-    Default: dev
+    Default: prd
 Resources:
   InputBucket:
     Type: AWS::S3::Bucket

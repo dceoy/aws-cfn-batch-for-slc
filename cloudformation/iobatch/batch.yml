@@ -9,15 +9,15 @@ Parameters:
   EnvType:
     Description: Environment Type.
     Type: String
-    Default: dev
+    Default: prd
   IAMStackName:
     Description: IAM Stack Name.
     Type: String
-    Default: iobatch-dev-iam
+    Default: iobatch-prd-iam
   VpcStackName:
     Description: Vpc Stack Name.
     Type: String
-    Default: iobatch-dev-vpc
+    Default: iobatch-prd-vpc
 Resources:
   # EC2 Security Group
   Ec2SecurityGroup:

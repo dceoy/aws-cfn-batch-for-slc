@@ -9,11 +9,11 @@ Parameters:
   EnvType:
     Description: Environment Type.
     Type: String
-    Default: dev
+    Default: prd
   S3StackName:
     Description: S3 Stack Name.
     Type: String
-    Default: iobatch-dev-s3
+    Default: iobatch-prd-s3
 Resources:
   # IAM User Groups
   OpsGroup:
