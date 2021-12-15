@@ -25,8 +25,8 @@ Installation
     $ rain deploy cloudformation/iobatch/vpc.yml iobatch-dev-vpc
     $ rain deploy cloudformation/iobatch/s3.yml iobatch-dev-s3
     $ rain deploy cloudformation/iobatch/iam.yml iobatch-dev-iam
-    $ rain deploy cloudformation/iobatch/batch.yml iobatch-dev-batch
     $ rain deploy cloudformation/iobatch/chatbot.yml iobatch-dev-chatbot
+    $ rain deploy cloudformation/iobatch/batch.yml iobatch-dev-batch
     ```
 
 5.  Deploy stacks for global configurations. (optional)

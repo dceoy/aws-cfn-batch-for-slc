@@ -14,6 +14,7 @@ Resources:
   InputBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub ${SystemName}-${EnvType}-input-${AWS::AccountId}
       BucketEncryption:
@@ -41,6 +42,7 @@ Resources:
   ReferenceBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub ${SystemName}-${EnvType}-reference-${AWS::AccountId}
       BucketEncryption:
@@ -68,6 +70,7 @@ Resources:
   OutputBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub ${SystemName}-${EnvType}-output-${AWS::AccountId}
       BucketEncryption:
@@ -93,6 +96,7 @@ Resources:
   ArchiveBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub ${SystemName}-${EnvType}-archive-${AWS::AccountId}
       BucketEncryption:
@@ -120,6 +124,7 @@ Resources:
   AccessLogBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub ${SystemName}-${EnvType}-access-log-${AWS::AccountId}
       BucketEncryption:
