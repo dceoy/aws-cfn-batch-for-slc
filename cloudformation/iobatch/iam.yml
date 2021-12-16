@@ -25,6 +25,11 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
         - arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonGuardDutyReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSCloudTrailReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
       Policies:
         - PolicyName: !Sub ${SystemName}-${EnvType}-operator-batch-policy
           PolicyDocument:
@@ -38,6 +43,20 @@ Resources:
                   - batch:SubmitJob
                   - batch:CancelJob
                   - batch:TerminateJob
+              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${SystemName}*
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-stepfunctions-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - states:Describe*
+                  - states:List*
+                  - states:*Execution*
               - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${SystemName}*
                 Effect: Allow
                 Action:
@@ -202,6 +221,7 @@ Resources:
   BatchSpotFleetRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub ${SystemName}-${EnvType}-BatchSpotFleetRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -216,7 +236,7 @@ Resources:
   StepFunctionsExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      Description: !Sub stepfunctions-service-role-${AWS::StackName}-${AWS::Region}
+      RoleName: !Sub ${SystemName}-${EnvType}-StepFunctionsExecutionRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -225,7 +245,7 @@ Resources:
               Service: states.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub states-access-policy-${AWS::Region}
+        - PolicyName: !Sub ${SystemName}-${EnvType}-StepFunctionsExecutionRole-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -250,6 +270,13 @@ Resources:
                   - events:DescribeRule
                 Resource:
                   - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForBatchJobsRule
+              - Effect: Allow
+                Action:
+                  - xray:PutTraceSegments
+                  - xray:PutTelemetryRecords
+                  - xray:GetSamplingRules
+                  - xray:GetSamplingTargets
+                Resource: '*'
 Outputs:
   BatchServiceRole:
     Value: !GetAtt BatchServiceRole.Arn
@@ -281,3 +308,8 @@ Outputs:
     Description: BatchSpotFleetRole
     Export:
       Name: !Sub ${AWS::StackName}-BatchSpotFleetRole
+  StepFunctionsExecutionRole:
+    Value: !GetAtt StepFunctionsExecutionRole.Arn
+    Description: StepFunctionsExecutionRole
+    Export:
+      Name: !Sub ${AWS::StackName}-StepFunctionsExecutionRole

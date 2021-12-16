@@ -61,6 +61,27 @@ Resources:
                   StringEqualsIfExists:
                     iam:PassedToService:
                       - ecs-tasks.amazonaws.com
+        - PolicyName: ci-state-machines-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - states:CreateStateMachine
+                  - states:DeleteStateMachine
+                  - states:DescribeStateMachine
+                  - states:DescribeStateMachineForExecution
+                  - states:ListStateMachines
+                  - states:UpdateStateMachine
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - ecs-tasks.amazonaws.com
   DevGroup:
     Type: AWS::IAM::Group
     Properties:
@@ -68,6 +89,8 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
       Policies:
         - PolicyName: batch-developer-policy
           PolicyDocument:
@@ -80,6 +103,29 @@ Resources:
                   - batch:List*
                   - batch:RegisterJobDefinition
                   - batch:DeregisterJobDefinition
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - ecs-tasks.amazonaws.com
+        - PolicyName: stepfunctions-developer-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - states:Describe*
+                  - states:List*
+                  - states:CreateStateMachine
+                  - states:DeleteStateMachine
+                  - states:DescribeStateMachine
+                  - states:DescribeStateMachineForExecution
+                  - states:ListStateMachines
+                  - states:UpdateStateMachine
               - Resource: '*'
                 Effect: Allow
                 Action:
