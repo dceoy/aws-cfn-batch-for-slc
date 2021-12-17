@@ -10,24 +10,24 @@ Parameters:
     Description: Environment Type.
     Type: String
     Default: prd
-  TopicName:
-    Description: SNS Topic Name.
-    Type: String
-    Default: batch-topic
   SlackWorkspaceId:
     Description: Slack Workspace ID.
     Type: String
     Default: XXXXXXXXX
-  SlackChannelId:
-    Description: Slack Channel ID.
+  BatchSlackChannelId:
+    Description: Slack Channel ID for AWS Batch.
     Type: String
     Default: awsbatch
+  StepFunctionsSlackChannelId:
+    Description: Slack Channel ID for AWS Step Functions.
+    Type: String
+    Default: awsstepfunctions
 Resources:
-  SnsTopic:
+  BatchSnsTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub ${SystemName}-${EnvType}-${TopicName}
-  SnsTopicPolicy:
+      TopicName: !Sub ${SystemName}-${EnvType}-batch-topic
+  BatchSnsTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
       PolicyDocument:
@@ -38,43 +38,64 @@ Resources:
               Service:
                 - events.amazonaws.com
             Action: sns:Publish
-            Resource: !Ref SnsTopic
+            Resource: !Ref BatchSnsTopic
       Topics:
-        - !Ref SnsTopic
-  EventRule:
+        - !Ref BatchSnsTopic
+  BatchEventRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub ${SystemName}-${EnvType}-${TopicName}-event-rule
+      Name: !Sub ${SystemName}-${EnvType}-batch-topic-event-rule
       EventPattern:
         source:
           - aws.batch
       Targets:
-        - Arn: !Ref SnsTopic
-          Id: sns-topic
-  ChatbotConfiguration:
+        - Arn: !Ref BatchSnsTopic
+          Id: batch-sns-topic
+  BatchChatbotConfiguration:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:
-      ConfigurationName: !Sub ${SystemName}-${EnvType}-${TopicName}-chatbot-config
+      ConfigurationName: !Sub ${SystemName}-${EnvType}-batch-topic-chatbot-config
       IamRoleArn: arn:aws:iam::123456789012:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
       LoggingLevel: NONE
-      SlackChannelId: !Ref SlackChannelId
+      SlackChannelId: !Ref BatchSlackChannelId
       SlackWorkspaceId: !Ref SlackWorkspaceId
       SnsTopicArns:
-        - !Ref SnsTopic
-Outputs:
-  SnsTopic:
-    Value: !Ref SnsTopic
-    Export:
-      Name: !Sub ${AWS::StackName}-SnsTopic
-  SnsTopicPolicy:
-    Value: !Ref SnsTopicPolicy
-    Export:
-      Name: !Sub ${AWS::StackName}-SnsTopicPolicy
-  EventRule:
-    Value: !Ref EventRule
-    Export:
-      Name: !Sub ${AWS::StackName}-EventRule
-  ChatbotConfiguration:
-    Value: !Ref ChatbotConfiguration
-    Export:
-      Name: !Sub ${AWS::StackName}-ChatbotConfiguration
+        - !Ref BatchSnsTopic
+  StepFunctionsSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${SystemName}-${EnvType}-stepfunctions-topic
+  StepFunctionsSnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref StepFunctionsSnsTopic
+      Topics:
+        - !Ref StepFunctionsSnsTopic
+  StepFunctionsEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ${SystemName}-${EnvType}-stepfunctions-topic-event-rule
+      EventPattern:
+        source:
+          - aws.states
+      Targets:
+        - Arn: !Ref StepFunctionsSnsTopic
+          Id: stepfunctions-sns-topic
+  StepFunctionsChatbotConfiguration:
+    Type: AWS::Chatbot::SlackChannelConfiguration
+    Properties:
+      ConfigurationName: !Sub ${SystemName}-${EnvType}-stepfunctions-topic-chatbot-config
+      IamRoleArn: arn:aws:iam::123456789012:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
+      LoggingLevel: NONE
+      SlackChannelId: !Ref StepFunctionsSlackChannelId
+      SlackWorkspaceId: !Ref SlackWorkspaceId
+      SnsTopicArns:
+        - !Ref StepFunctionsSnsTopic
