@@ -84,7 +84,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-frontend-subnet-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone1]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone1]]
   FrontendSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
@@ -95,7 +95,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-frontend-subnet-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone2]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone2]]
   FrontendSubnet3:
     Type: AWS::EC2::Subnet
     Properties:
@@ -106,7 +106,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-frontend-subnet-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone3]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone3]]
   ApplicationSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -117,7 +117,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-application-subnet-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone1]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone1]]
   ApplicationSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
@@ -128,7 +128,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-application-subnet-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone2]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone2]]
   ApplicationSubnet3:
     Type: AWS::EC2::Subnet
     Properties:
@@ -139,7 +139,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-application-subnet-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone3]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone3]]
   # NATGateway and EIP
   Natgw1:
     Type: AWS::EC2::NatGateway
@@ -150,7 +150,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${SystemName}-${EnvType}-natgw-${AZ}
-            - {AZ: !Select [2, !Split ['-', !Ref AvailabilityZone1]]}
+            - AZ: !Select [2, !Split ['-', !Ref AvailabilityZone1]]
   NatgwEip1:
     Type: AWS::EC2::EIP
     Properties:

@@ -160,7 +160,17 @@ Resources:
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - /*
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
                         - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
@@ -169,21 +179,6 @@ Resources:
                   - s3-object-lambda:Get*
                   - s3-object-lambda:List*
                   - s3-object-lambda:PutObject*
-              - Resource:
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
-                        - /*
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
-                        - /*
-                Effect: Allow
-                Action:
-                  - s3:*
-                  - s3-object-lambda:*
   BatchJobExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -300,7 +295,17 @@ Resources:
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - /*
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
                         - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - /*
                 Effect: Allow
                 Action:
                   - s3:Get*
@@ -309,21 +314,6 @@ Resources:
                   - s3-object-lambda:Get*
                   - s3-object-lambda:List*
                   - s3-object-lambda:PutObject*
-              - Resource:
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
-                        - /*
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
-                        - /*
-                Effect: Allow
-                Action:
-                  - s3:*
-                  - s3-object-lambda:*
   StepFunctionsExecutionRole:
     Type: AWS::IAM::Role
     Properties:
