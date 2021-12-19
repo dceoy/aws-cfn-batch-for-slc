@@ -121,6 +121,7 @@ Resources:
         SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - m6i
+          - m5
           - c5
           - r5
       ServiceRole:
@@ -223,7 +224,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton-ondemand
       ComputeResources:
-        AllocationStrategy: BEST_FIT
+        AllocationStrategy: BEST_FIT_PROGRESSIVE
         MinvCpus: 0
         MaxvCpus: 1024
         SecurityGroupIds:
@@ -253,7 +254,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel-ondemand
       ComputeResources:
-        AllocationStrategy: BEST_FIT
+        AllocationStrategy: BEST_FIT_PROGRESSIVE
         MinvCpus: 0
         MaxvCpus: 1024
         SecurityGroupIds:
@@ -272,6 +273,7 @@ Resources:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
+          - m5
           - c5
           - r5
       ServiceRole:
@@ -283,7 +285,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia-ondemand
       ComputeResources:
-        AllocationStrategy: BEST_FIT
+        AllocationStrategy: BEST_FIT_PROGRESSIVE
         MinvCpus: 0
         MaxvCpus: 1024
         SecurityGroupIds:
