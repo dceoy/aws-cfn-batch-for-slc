@@ -39,8 +39,9 @@ Resources:
         BlockDeviceMappings:
           - DeviceName: /dev/xvda
             Ebs:
-              VolumeSize: 1100
-              VolumeType: gp3
+              VolumeSize: 2000
+              VolumeType: io2
+              Iops: 32000
               Encrypted: true
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
@@ -121,9 +122,9 @@ Resources:
         SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - m6i
-          - m5
           - c5
           - r5
+          - r5b
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -273,9 +274,9 @@ Resources:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
-          - m5
           - c5
           - r5
+          - r5b
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
