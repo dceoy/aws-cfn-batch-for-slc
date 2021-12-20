@@ -1,6 +1,15 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: AWS CloudFormation Template for IAM
+Description: AWS CloudFormation Template for IAM user groups
+Parameters:
+  SystemName:
+    Description: System Name.
+    Type: String
+    Default: iobatch
+  EnvType:
+    Description: Environment Type.
+    Type: String
+    Default: prd
 Resources:
   CiGroup:
     Type: AWS::IAM::Group
@@ -85,14 +94,14 @@ Resources:
   DevGroup:
     Type: AWS::IAM::Group
     Properties:
-      GroupName: batch-developer-group
+      GroupName: !Sub ${SystemName}-${EnvType}-developer-group
       Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
         - arn:aws:iam::aws:policy/ReadOnlyAccess
       Policies:
-        - PolicyName: batch-developer-policy
+        - PolicyName: !Sub ${SystemName}-${EnvType}-developer-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -134,3 +143,79 @@ Resources:
                   StringEqualsIfExists:
                     iam:PassedToService:
                       - ecs-tasks.amazonaws.com
+  OpsGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Sub ${SystemName}-${EnvType}-operator-group
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonGuardDutyReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSCloudTrailReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
+      Policies:
+        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-batch-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - batch:Describe*
+                  - batch:List*
+                  - batch:SubmitJob
+                  - batch:CancelJob
+                  - batch:TerminateJob
+              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${SystemName}*
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-stepfunctions-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - states:Describe*
+                  - states:List*
+                  - states:*Execution*
+              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${SystemName}*
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-s3-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                  - s3:GetAccountPublicAccessBlock
+                  - s3:GetBucketPublicAccessBlock
+                  - s3:GetBucketPolicyStatus
+                  - s3:GetBucketAcl
+                  - s3:ListAccessPoints
+              - Resource: !Sub arn:aws:s3:::${SystemName}-${EnvType}*
+                Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                  - s3-object-lambda:Get*
+                  - s3-object-lambda:List*
+              - Resource: !Sub arn:aws:s3:::${SystemName}-${EnvType}*/*
+                Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                  - s3:*Object*
+                  - s3:*MultipartUpload*
+                  - s3-object-lambda:Get*
+                  - s3-object-lambda:List*
+                  - s3-object-lambda:*Object*
+                  - s3-object-lambda:*MultipartUpload*

@@ -31,10 +31,10 @@ Installation
     $ rain deploy cloudformation/global/chatbot.yml global-chatbot
     ```
 
-5.  Deploy stacks for global configurations. (optional)
+5.  Deploy stacks for user groups. (optional)
 
     ```sh
-    $ rain deploy cloudformation/global/iam.yml global-iam
+    $ rain deploy cloudformation/user/iam.yml user-iam
     ```
 
 6.  Deploy stacks for batch environments.
