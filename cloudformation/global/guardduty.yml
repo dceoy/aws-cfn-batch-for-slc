@@ -40,4 +40,4 @@ Resources:
           - GuardDuty Finding
       Targets:
         - Arn: !Ref SnsTopic
-          Id: sns-topic
+          Id: guardduty-sns-topic

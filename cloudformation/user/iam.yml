@@ -90,7 +90,7 @@ Resources:
                 Condition:
                   StringEqualsIfExists:
                     iam:PassedToService:
-                      - ecs-tasks.amazonaws.com
+                      - states.amazonaws.com
   DevGroup:
     Type: AWS::IAM::Group
     Properties:
