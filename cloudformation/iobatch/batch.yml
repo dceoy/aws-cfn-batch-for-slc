@@ -52,7 +52,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate-spot
       ComputeResources:
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: FARGATE_SPOT
@@ -72,7 +72,7 @@ Resources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
         MinvCpus: 0
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: SPOT
@@ -104,7 +104,7 @@ Resources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
         MinvCpus: 0
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: SPOT
@@ -137,7 +137,7 @@ Resources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
         MinvCpus: 0
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: SPOT
@@ -208,7 +208,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate-ondemand
       ComputeResources:
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: FARGATE
@@ -227,7 +227,7 @@ Resources:
       ComputeResources:
         AllocationStrategy: BEST_FIT_PROGRESSIVE
         MinvCpus: 0
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: EC2
@@ -257,7 +257,7 @@ Resources:
       ComputeResources:
         AllocationStrategy: BEST_FIT_PROGRESSIVE
         MinvCpus: 0
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: EC2
@@ -288,7 +288,7 @@ Resources:
       ComputeResources:
         AllocationStrategy: BEST_FIT_PROGRESSIVE
         MinvCpus: 0
-        MaxvCpus: 1024
+        MaxvCpus: 2048
         SecurityGroupIds:
           - !Ref Ec2SecurityGroup
         Type: EC2
