@@ -166,10 +166,10 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole
-  LambdaRole:
+  LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-LambdaRole
+      RoleName: !Sub ${SystemName}-${EnvType}-LambdaExecutionRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -180,7 +180,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-LambdaRole-policy
+        - PolicyName: !Sub ${SystemName}-${EnvType}-LambdaExecutionRole-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -236,6 +236,8 @@ Resources:
                   - s3-object-lambda:Get*
                   - s3-object-lambda:List*
                   - s3-object-lambda:PutObject*
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
   StepFunctionsExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -311,11 +313,11 @@ Outputs:
     Description: BatchSpotFleetRole
     Export:
       Name: !Sub ${AWS::StackName}-BatchSpotFleetRole
-  LambdaRole:
-    Value: !GetAtt LambdaRole.Arn
-    Description: LambdaRole
+  LambdaExecutionRole:
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Description: LambdaExecutionRole
     Export:
-      Name: !Sub ${AWS::StackName}-LambdaRole
+      Name: !Sub ${AWS::StackName}-LambdaExecutionRole
   StepFunctionsExecutionRole:
     Value: !GetAtt StepFunctionsExecutionRole.Arn
     Description: StepFunctionsExecutionRole

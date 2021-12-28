@@ -70,6 +70,28 @@ Resources:
                   StringEqualsIfExists:
                     iam:PassedToService:
                       - ecs-tasks.amazonaws.com
+        - PolicyName: ci-lambda-function-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - lambda:CreateFunction
+                  - lambda:DeleteFunction
+                  - lambda:GetFunction
+                  - lambda:GetFunctionConfiguration
+                  - lambda:ListFunctions
+                  - lambda:UpdateFunctionCode
+                  - lambda:UpdateFunctionConfiguration
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - lambda.amazonaws.com
         - PolicyName: ci-state-machines-policy
           PolicyDocument:
             Version: 2012-10-17
@@ -142,7 +164,7 @@ Resources:
                 Condition:
                   StringEqualsIfExists:
                     iam:PassedToService:
-                      - ecs-tasks.amazonaws.com
+                      - states.amazonaws.com
   OpsGroup:
     Type: AWS::IAM::Group
     Properties:
