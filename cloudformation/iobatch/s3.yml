@@ -117,7 +117,7 @@ Resources:
             Status: Enabled
             Transitions:
               - TransitionInDays: 1
-                StorageClass: DEEP_ARCHIVE
+                StorageClass: GLACIER
       LoggingConfiguration:
         DestinationBucketName: !Ref AccessLogBucket
         LogFilePrefix: !Sub ${SystemName}-${EnvType}-archive-${AWS::AccountId}/
