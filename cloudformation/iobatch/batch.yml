@@ -40,8 +40,7 @@ Resources:
           - DeviceName: /dev/xvda
             Ebs:
               VolumeSize: 2000
-              VolumeType: io2
-              Iops: 32000
+              VolumeType: gp3
               Encrypted: true
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
@@ -124,7 +123,6 @@ Resources:
           - m6i
           - c5
           - r5
-          - r5b
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -276,7 +274,6 @@ Resources:
           - m6i
           - c5
           - r5
-          - r5b
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
