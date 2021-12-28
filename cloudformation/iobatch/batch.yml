@@ -121,7 +121,7 @@ Resources:
         SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - m6i
-          - c5
+          - c5    # => c6i
           - r5
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
@@ -272,7 +272,7 @@ Resources:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
-          - c5
+          - c5    # => c6i
           - r5
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole

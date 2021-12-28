@@ -36,6 +36,8 @@ Resources:
             Transitions:
               - TransitionInDays: 0
                 StorageClass: INTELLIGENT_TIERING
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
       LoggingConfiguration:
         DestinationBucketName: !Ref AccessLogBucket
         LogFilePrefix: !Sub ${SystemName}-${EnvType}-input-${AWS::AccountId}/
@@ -64,6 +66,8 @@ Resources:
             Transitions:
               - TransitionInDays: 0
                 StorageClass: INTELLIGENT_TIERING
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
       LoggingConfiguration:
         DestinationBucketName: !Ref AccessLogBucket
         LogFilePrefix: !Sub ${SystemName}-${EnvType}-reference-${AWS::AccountId}/
@@ -89,7 +93,12 @@ Resources:
         Rules:
           - Id: Expiration
             Status: Enabled
+            Transitions:
+              - TransitionInDays: 0
+                StorageClass: INTELLIGENT_TIERING
             ExpirationInDays: 14
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
       LoggingConfiguration:
         DestinationBucketName: !Ref AccessLogBucket
         LogFilePrefix: !Sub ${SystemName}-${EnvType}-output-${AWS::AccountId}/
@@ -113,11 +122,15 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: GlacierRule
+          - Id: Glacier
             Status: Enabled
             Transitions:
-              - TransitionInDays: 1
-                StorageClass: GLACIER
+              - TransitionInDays: 0
+                StorageClass: INTELLIGENT_TIERING
+              - TransitionInDays: 14
+                StorageClass: GLACIER   # => GLACIER_INSTANT_RETRIEVAL
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
       LoggingConfiguration:
         DestinationBucketName: !Ref AccessLogBucket
         LogFilePrefix: !Sub ${SystemName}-${EnvType}-archive-${AWS::AccountId}/
@@ -144,6 +157,8 @@ Resources:
             Transitions:
               - TransitionInDays: 0
                 StorageClass: INTELLIGENT_TIERING
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
 Outputs:
   InputBucket:
     Value: !Ref InputBucket
