@@ -41,6 +41,8 @@ Resources:
             Ebs:
               VolumeSize: 2000
               VolumeType: gp3
+              Iops: 1600
+              Throughput: 1000
               Encrypted: true
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
