@@ -41,8 +41,8 @@ Resources:
             Ebs:
               VolumeSize: 2000
               VolumeType: gp3
-              Iops: 1600
-              Throughput: 1000
+              Iops: 16000
+              Throughput: 500
               Encrypted: true
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
@@ -225,7 +225,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton-ondemand
       ComputeResources:
-        AllocationStrategy: BEST_FIT_PROGRESSIVE
+        AllocationStrategy: BEST_FIT
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
@@ -255,7 +255,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel-ondemand
       ComputeResources:
-        AllocationStrategy: BEST_FIT_PROGRESSIVE
+        AllocationStrategy: BEST_FIT
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
@@ -285,7 +285,7 @@ Resources:
       Type: MANAGED
       ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia-ondemand
       ComputeResources:
-        AllocationStrategy: BEST_FIT_PROGRESSIVE
+        AllocationStrategy: BEST_FIT
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
