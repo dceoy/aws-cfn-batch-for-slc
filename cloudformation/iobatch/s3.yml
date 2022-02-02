@@ -91,12 +91,12 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: Expiration
+          - Id: IntelligentTiering
             Status: Enabled
             Transitions:
               - TransitionInDays: 0
                 StorageClass: INTELLIGENT_TIERING
-            ExpirationInDays: 14
+            # ExpirationInDays: 14
             NoncurrentVersionExpiration:
               NoncurrentDays: 7
       LoggingConfiguration:
