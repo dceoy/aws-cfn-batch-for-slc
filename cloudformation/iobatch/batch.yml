@@ -124,7 +124,7 @@ Resources:
         InstanceTypes:
           - m6i
           - c5    # => c6i
-          - r5
+          - r5    # => r6i
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -275,7 +275,7 @@ Resources:
         InstanceTypes:
           - m6i
           - c5    # => c6i
-          - r5
+          - r5    # => r6i
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED

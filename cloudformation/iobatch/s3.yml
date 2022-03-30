@@ -128,7 +128,7 @@ Resources:
               - TransitionInDays: 0
                 StorageClass: INTELLIGENT_TIERING
               - TransitionInDays: 14
-                StorageClass: GLACIER   # => GLACIER_INSTANT_RETRIEVAL
+                StorageClass: GLACIER_IR
             NoncurrentVersionExpiration:
               NoncurrentDays: 7
       LoggingConfiguration:
