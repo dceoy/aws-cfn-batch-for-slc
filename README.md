@@ -17,13 +17,13 @@ Installation
 
 2.  Install [Rain](https://github.com/aws-cloudformation/rain) and set `~/.aws/config` and `~/.aws/credentials`.
 
-3.  Set Slack client on AWS Chatbot and get Slack workspace ID.
+3.  Set a Slack client on AWS Chatbot and get the Slack workspace ID.
 
 4.  Deploy stacks for Amazon GuardDuty. (optional)
 
-    i.    Create IAM roles for CloudFormation StackSets.
+    i.    Create IAM roles for administration and execution of CloudFormation StackSets.
 
-    ii.   Create StackSet for all available regions using `cloudformation/global/guardduty.yml`.
+    ii.   Create a StackSet for all available regions using `cloudformation/global/guardduty.yml`.
 
     iii.  Deploy a Chatbot stack for GuardDuty.
 
