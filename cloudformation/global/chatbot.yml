@@ -19,7 +19,7 @@ Resources:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:
       ConfigurationName: !Sub ${SnsTopicName}-chatbot-config
-      IamRoleArn: arn:aws:iam::123456789012:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
+      IamRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
       LoggingLevel: NONE
       SlackChannelId: !Ref SlackChannelId
       SlackWorkspaceId: !Ref SlackWorkspaceId
