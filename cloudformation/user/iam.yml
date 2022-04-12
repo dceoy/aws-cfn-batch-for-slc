@@ -217,15 +217,16 @@ Resources:
               - Resource: '*'
                 Effect: Allow
                 Action:
-                  - s3:ListAllMyBuckets
                   - s3:GetAccountPublicAccessBlock
-                  - s3:GetBucketPublicAccessBlock
-                  - s3:GetBucketPolicyStatus
                   - s3:GetBucketAcl
+                  - s3:GetBucketPolicyStatus
+                  - s3:GetBucketPublicAccessBlock
                   - s3:ListAccessPoints
+                  - s3:ListAllMyBuckets
               - Resource: !Sub arn:aws:s3:::${SystemName}-${EnvType}*
                 Effect: Allow
                 Action:
+                  - s3:Describe*
                   - s3:Get*
                   - s3:List*
                   - s3-object-lambda:Get*
@@ -233,6 +234,7 @@ Resources:
               - Resource: !Sub arn:aws:s3:::${SystemName}-${EnvType}*/*
                 Effect: Allow
                 Action:
+                  - s3:Describe*
                   - s3:Get*
                   - s3:List*
                   - s3:*Object*
