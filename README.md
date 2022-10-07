@@ -1,5 +1,5 @@
-iobatch
-=======
+aws-cfn-batch-with-s3
+=====================
 
 AWS Stacks for Batch Processing with I/O to S3 Buckets
 

@@ -123,8 +123,8 @@ Resources:
         SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - m6i
-          - c5    # => c6i
-          - r5    # => r6i
+          - c6i
+          - r6i
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -155,12 +155,7 @@ Resources:
         SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - p4d
-          - g4dn.xlarge
-          - g4dn.2xlarge
-          - g4dn.4xlarge
-          - g4dn.8xlarge
-          - g4dn.12xlarge
-          - g4dn.16xlarge
+          - g4dn
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -274,8 +269,8 @@ Resources:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
-          - c5    # => c6i
-          - r5    # => r6i
+          - c6i
+          - r6i
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -304,12 +299,7 @@ Resources:
           Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - p4d
-          - g4dn.xlarge
-          - g4dn.2xlarge
-          - g4dn.4xlarge
-          - g4dn.8xlarge
-          - g4dn.12xlarge
-          - g4dn.16xlarge
+          - g4dn
       ServiceRole:
         Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
       State: ENABLED
