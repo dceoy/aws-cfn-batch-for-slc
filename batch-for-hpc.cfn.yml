@@ -1,19 +1,19 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: AWS CloudFormation Template for Batch
+Description: Batch for high-performance computing
 Parameters:
   SystemName:
     Description: System Name.
     Type: String
-    Default: iobatch
+    Default: slhpc
   EnvType:
     Description: Environment Type.
     Type: String
-    Default: prd
+    Default: dev
   IamStackName:
     Description: IAM Stack Name.
     Type: String
-    Default: iobatch-prd-iam-roles-for-batch-services
+    Default: slhpc-dev-iam-roles-for-batch-services
   VpcStackName:
     Description: Vpc Stack Name.
     Type: String

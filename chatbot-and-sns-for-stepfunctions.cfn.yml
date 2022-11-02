@@ -1,15 +1,15 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: AWS CloudFormation Template for Chatbot
+Description: Chatbot and SNS for Step Functions
 Parameters:
   SystemName:
     Description: System Name.
     Type: String
-    Default: iobatch
+    Default: slhpc
   EnvType:
     Description: Environment Type.
     Type: String
-    Default: prd
+    Default: dev
   SnsTopicName:
     Description: SNS Topic Name.
     Type: String

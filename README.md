@@ -1,7 +1,7 @@
-aws-cfn-batch-with-s3
+aws-cfn-batch-for-slc
 =====================
 
-AWS CloudFormation stacks for batch processing with I/O to S3 buckets
+AWS CloudFormation stacks of Batch for serverless HPC
 
 [![Lint](https://github.com/dceoy/aws-cfn-batch-with-s3/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/aws-cfn-batch-with-s3/actions/workflows/lint.yml)
 
@@ -24,16 +24,16 @@ Installation
     ```sh
     $ rain deploy \
         iam-user-groups-for-devops.cfn.yml \
-        iobatch-prd-iam-user-groups-for-devops
+        slhpc-dev-iam-user-groups-for-devops
     ```
 
 5.  Deploy stacks for VPC private subnets and a VPC endpoint for S3.
 
     ```sh
     $ rain deploy \
-        --params ProjectName=iobatch-prd \
+        --params ProjectName=slhpc-dev \
         aws-cfn-vpc-for-slc/vpc-private-subnets-and-s3-endpoint.cfn.yml \
-        iobatch-prd-vpc-private
+        slhpc-dev-vpc-private
     ```
 
 6.  Deploy stacks for S3 buckets, IAM roles, and Batch.
@@ -41,24 +41,24 @@ Installation
     ```sh
     $ rain deploy \
         s3-buckets-for-batch-io.cfn.yml \
-        iobatch-prd-s3-buckets-for-batch-io
+        slhpc-dev-s3-buckets-for-batch-io
     $ rain deploy \
-        --params S3StackName=iobatch-prd-s3-buckets-for-batch-io \
+        --params S3StackName=slhpc-dev-s3-buckets-for-batch-io \
         iam-roles-for-batch-services.cfn.yml \
-        iobatch-prd-iam-roles-for-batch-services
+        slhpc-dev-iam-roles-for-batch-services
     $ rain deploy \
-        --params IamStackName=iobatch-prd-iam-roles-for-batch-services,VpcStackName=iobatch-prd-vpc-private \
+        --params IamStackName=slhpc-dev-iam-roles-for-batch-services,VpcStackName=slhpc-dev-vpc-private \
         batch-for-hpc.cfn.yml \
-        iobatch-prd-batch-for-hpc
+        slhpc-dev-batch-for-hpc
     ```
 
 7.  Deploy stacks for VPC public subnets and a Nat gateway for internet access. (optional)
 
     ```sh
     $ rain deploy \
-        --params VpcStackName=iobatch-prd-vpc-private,ProjectName=iobatch-prd \
+        --params VpcStackName=slhpc-dev-vpc-private,ProjectName=slhpc-dev \
         aws-cfn-vpc-for-slc/vpc-public-subnets-and-nat-gateway.cfn.yml \
-        iobatch-prd-vpc-public
+        slhpc-dev-vpc-public
     ```
 
 8.  Deploy a Chatbot for AWS Step Functions. (optional)
@@ -66,5 +66,5 @@ Installation
     ```sh
     $ rain deploy \
         chatbot-and-sns-for-stepfunctions.cfn.yml \
-        iobatch-prd-chatbot-and-sns-for-stepfunctions
+        slhpc-dev-chatbot-and-sns-for-stepfunctions
     ```
