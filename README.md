@@ -1,9 +1,9 @@
 aws-cfn-batch-with-s3
 =====================
 
-AWS Stacks for Batch Processing with I/O to S3 Buckets
+AWS CloudFormation stacks for batch processing with I/O to S3 buckets
 
-[![Lint](https://github.com/dceoy/iobatch/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/iobatch/actions/workflows/lint.yml)
+[![Lint](https://github.com/dceoy/aws-cfn-batch-with-s3/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/aws-cfn-batch-with-s3/actions/workflows/lint.yml)
 
 Installation
 ------------
@@ -11,8 +11,8 @@ Installation
 1.  Check out the repository.
 
     ```sh
-    $ git clone git@github.com:dceoy/iobatch.git
-    $ cd iobatch
+    $ git clone git@github.com:dceoy/aws-cfn-batch-with-s3.git
+    $ cd aws-cfn-batch-with-s3
     ```
 
 2.  Install [Rain](https://github.com/aws-cloudformation/rain) and set `~/.aws/config` and `~/.aws/credentials`.
@@ -22,20 +22,20 @@ Installation
 4.  Deploy stacks for user groups. (optional)
 
     ```sh
-    $ rain deploy cloudformation/user/iam.yml user-iam
+    $ rain deploy iam-user-groups-for-devops.cfn.yml iobatch-prd-iam-user-groups-for-devops
     ```
 
 5.  Deploy stacks for batch environments.
 
     ```sh
-    $ rain deploy cloudformation/iobatch/s3.yml iobatch-prd-s3
-    $ rain deploy cloudformation/iobatch/vpc.yml iobatch-prd-vpc
-    $ rain deploy cloudformation/iobatch/iam.yml iobatch-prd-iam
-    $ rain deploy cloudformation/iobatch/batch.yml iobatch-prd-batch
+    $ rain deploy s3-buckets-for-batch-io.cfn.yml iobatch-prd-s3-buckets-for-batch-io
+    $ rain deploy iam-roles-for-batch-services.cfn.yml iobatch-prd-iam-roles-for-batch-services
+    $ rain deploy vpc-with-natgw.cfn.yml iobatch-prd-vpc-with-natgw
+    $ rain deploy batch-for-hpc.cfn.yml iobatch-prd-batch-for-hpc
     ```
 
 6.  Deploy a Chatbot for AWS Step Functions. (optional)
 
     ```sh
-    $ rain deploy cloudformation/iobatch/chatbot.yml iobatch-prd-chatbot
+    $ rain deploy chatbot-and-sns-for-stepfunctions.cfn.yml iobatch-prd-chatbot-and-sns-for-stepfunctions
     ```

@@ -13,11 +13,11 @@ Parameters:
   IamStackName:
     Description: IAM Stack Name.
     Type: String
-    Default: iobatch-prd-iam
+    Default: iobatch-prd-iam-roles-for-batch-services
   VpcStackName:
     Description: Vpc Stack Name.
     Type: String
-    Default: iobatch-prd-vpc
+    Default: iobatch-prd-vpc-with-natgw
 Resources:
   # EC2 Security Group
   Ec2SecurityGroup:
