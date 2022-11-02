@@ -163,20 +163,20 @@ Outputs:
   InputBucket:
     Value: !Ref InputBucket
     Export:
-      Name: !Sub ${AWS::StackName}-InputBucket
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-InputBucket
   ReferenceBucket:
     Value: !Ref ReferenceBucket
     Export:
-      Name: !Sub ${AWS::StackName}-ReferenceBucket
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-ReferenceBucket
   OutputBucket:
     Value: !Ref OutputBucket
     Export:
-      Name: !Sub ${AWS::StackName}-OutputBucket
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-OutputBucket
   ArchiveBucket:
     Value: !Ref ArchiveBucket
     Export:
-      Name: !Sub ${AWS::StackName}-ArchiveBucket
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-ArchiveBucket
   AccessLogBucket:
     Value: !Ref AccessLogBucket
     Export:
-      Name: !Sub ${AWS::StackName}-AccessLogBucket
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-AccessLogBucket

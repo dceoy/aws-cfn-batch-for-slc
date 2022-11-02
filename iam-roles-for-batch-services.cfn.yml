@@ -53,20 +53,20 @@ Resources:
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
                         - /*
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
                         - /*
                 Effect: Allow
                 Action:
@@ -78,20 +78,20 @@ Resources:
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
                         - /*
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
                         - /*
                 Effect: Allow
                 Action:
@@ -188,20 +188,20 @@ Resources:
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-InputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
                         - /*
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ReferenceBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
                         - /*
                 Effect: Allow
                 Action:
@@ -213,20 +213,20 @@ Resources:
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-OutputBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
                         - /*
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
                   - Fn::Join:
                       - ''
                       - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${S3StackName}-ArchiveBucket
+                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
                         - /*
                 Effect: Allow
                 Action:
@@ -287,39 +287,39 @@ Outputs:
     Value: !GetAtt BatchServiceRole.Arn
     Description: BatchServiceRole
     Export:
-      Name: !Sub ${AWS::StackName}-BatchServiceRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchServiceRole
   BatchJobRole:
     Value: !GetAtt BatchJobRole.Arn
     Description: BatchJobRole
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobRole
   BatchJobExecutionRole:
     Value: !GetAtt BatchJobExecutionRole.Arn
     Description: BatchJobExecutionRole
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobExecutionRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobExecutionRole
   BatchEc2InstanceRole:
     Value: !GetAtt BatchEc2InstanceRole.Arn
     Description: BatchEc2InstanceRole
     Export:
-      Name: !Sub ${AWS::StackName}-BatchEc2InstanceRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchEc2InstanceRole
   BatchEc2InstanceProfile:
     Value: !GetAtt BatchEc2InstanceProfile.Arn
     Description: BatchEc2InstanceProfile
     Export:
-      Name: !Sub ${AWS::StackName}-BatchEc2InstanceProfile
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchEc2InstanceProfile
   BatchSpotFleetRole:
     Value: !GetAtt BatchSpotFleetRole.Arn
     Description: BatchSpotFleetRole
     Export:
-      Name: !Sub ${AWS::StackName}-BatchSpotFleetRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchSpotFleetRole
   LambdaExecutionRole:
     Value: !GetAtt LambdaExecutionRole.Arn
     Description: LambdaExecutionRole
     Export:
-      Name: !Sub ${AWS::StackName}-LambdaExecutionRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-LambdaExecutionRole
   StepFunctionsExecutionRole:
     Value: !GetAtt StepFunctionsExecutionRole.Arn
     Description: StepFunctionsExecutionRole
     Export:
-      Name: !Sub ${AWS::StackName}-StepFunctionsExecutionRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-StepFunctionsExecutionRole

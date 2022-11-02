@@ -17,7 +17,7 @@ Parameters:
   VpcStackName:
     Description: Vpc Stack Name.
     Type: String
-    Default: iobatch-prd-vpc-with-natgw
+    Default: vpc-private-subnets-and-s3-endpoint
 Resources:
   # EC2 Security Group
   Ec2SecurityGroup:
@@ -26,7 +26,7 @@ Resources:
       GroupName: !Sub ${SystemName}-${EnvType}-ec2-security-group
       GroupDescription: !Sub ${SystemName}-${EnvType}-ec2-security-group
       VpcId:
-        Fn::ImportValue: !Sub ${VpcStackName}-Vpc
+        Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-Vpc
       Tags:
         - Key: Name
           Value: !Sub ${SystemName}-${EnvType}-ec2-security-group
@@ -58,11 +58,11 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: FARGATE_SPOT
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2GravitonSpot:
     Type: AWS::Batch::ComputeEnvironment
@@ -81,20 +81,20 @@ Resources:
           LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
-        SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
+        SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - c6g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2IntelSpot:
     Type: AWS::Batch::ComputeEnvironment
@@ -113,20 +113,20 @@ Resources:
           LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
-        SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
+        SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - m6i
           - c6i
           - r6i
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2NvidiaSpot:
     Type: AWS::Batch::ComputeEnvironment
@@ -145,19 +145,19 @@ Resources:
           LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
-        SpotIamFleetRole: !Sub ${IamStackName}-BatchSpotFleetRole
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
+        SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
           - p4d
           - g4dn
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   # Batch Job Queues (Spot)
   BatchJobQueueFargateSpot:
@@ -208,11 +208,11 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: FARGATE
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2GravitonOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -230,19 +230,19 @@ Resources:
           LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - c6g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2IntelOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -260,19 +260,19 @@ Resources:
           LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - m6i
           - c6i
           - r6i
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   BatchComputeEnvironmentEc2NvidiaOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -290,18 +290,18 @@ Resources:
           LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet1
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet2
-          - Fn::ImportValue: !Sub ${VpcStackName}-ApplicationSubnet3
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${IamStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
           - p4d
           - g4dn
       ServiceRole:
-        Fn::ImportValue: !Sub ${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
   # Batch Job Queues (OnDemand)
   BatchJobQueueFargateOnDemand:
@@ -344,72 +344,72 @@ Outputs:
   Ec2SecurityGroup:
     Value: !Ref Ec2SecurityGroup
     Export:
-      Name: !Sub ${AWS::StackName}-Ec2SecurityGroup
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-Ec2SecurityGroup
   Ec2LaunchTemplate:
     Value: !Ref Ec2LaunchTemplate
     Export:
-      Name: !Sub ${AWS::StackName}-Ec2LaunchTemplate
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-Ec2LaunchTemplate
   BatchComputeEnvironmentFargateSpot:
     Value: !Ref BatchComputeEnvironmentFargateSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentFargateSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentFargateSpot
   BatchComputeEnvironmentEc2GravitonSpot:
     Value: !Ref BatchComputeEnvironmentEc2GravitonSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2GravitonSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2GravitonSpot
   BatchComputeEnvironmentEc2IntelSpot:
     Value: !Ref BatchComputeEnvironmentEc2IntelSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2IntelSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2IntelSpot
   BatchComputeEnvironmentEc2NvidiaSpot:
     Value: !Ref BatchComputeEnvironmentEc2NvidiaSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaSpot
   BatchJobQueueFargateSpot:
     Value: !Ref BatchJobQueueFargateSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueFargateSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueFargateSpot
   BatchJobQueueEc2GravitonSpot:
     Value: !Ref BatchJobQueueEc2GravitonSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2GravitonSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2GravitonSpot
   BatchJobQueueEc2IntelSpot:
     Value: !Ref BatchJobQueueEc2IntelSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2IntelSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2IntelSpot
   BatchJobQueueEc2NvidiaSpot:
     Value: !Ref BatchJobQueueEc2NvidiaSpot
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2NvidiaSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2NvidiaSpot
   BatchComputeEnvironmentFargateOnDemand:
     Value: !Ref BatchComputeEnvironmentFargateOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentFargateOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentFargateOnDemand
   BatchComputeEnvironmentEc2GravitonOnDemand:
     Value: !Ref BatchComputeEnvironmentEc2GravitonOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2GravitonOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2GravitonOnDemand
   BatchComputeEnvironmentEc2IntelOnDemand:
     Value: !Ref BatchComputeEnvironmentEc2IntelOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2IntelOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2IntelOnDemand
   BatchComputeEnvironmentEc2NvidiaOnDemand:
     Value: !Ref BatchComputeEnvironmentEc2NvidiaOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaOnDemand
   BatchJobQueueFargateOnDemand:
     Value: !Ref BatchJobQueueFargateOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueFargateOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueFargateOnDemand
   BatchJobQueueEc2GravitonOnDemand:
     Value: !Ref BatchJobQueueEc2GravitonOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2GravitonOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2GravitonOnDemand
   BatchJobQueueEc2IntelOnDemand:
     Value: !Ref BatchJobQueueEc2IntelOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2IntelOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2IntelOnDemand
   BatchJobQueueEc2NvidiaOnDemand:
     Value: !Ref BatchJobQueueEc2NvidiaOnDemand
     Export:
-      Name: !Sub ${AWS::StackName}-BatchJobQueueEc2NvidiaOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2NvidiaOnDemand
