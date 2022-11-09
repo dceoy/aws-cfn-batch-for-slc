@@ -1,3 +1,6 @@
 [submodule "aws-cfn-vpc-for-slc"]
 	path = aws-cfn-vpc-for-slc
 	url = https://github.com/dceoy/aws-cfn-vpc-for-slc.git
+[submodule "aws-cfn-s3-for-io"]
+	path = aws-cfn-s3-for-io
+	url = https://github.com/dceoy/aws-cfn-s3-for-io.git

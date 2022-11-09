@@ -36,14 +36,20 @@ Installation
         slhpc-dev-vpc-private
     ```
 
-6.  Deploy stacks for S3 buckets, IAM roles, and Batch.
+6.  Deploy stacks for S3 buckets.
 
     ```sh
     $ rain deploy \
-        s3-buckets-for-batch-io.cfn.yml \
-        slhpc-dev-s3-buckets-for-batch-io
+        --params ProjectName=slhpc-dev \
+        aws-cfn-vpc-for-slc/s3-buckets-for-io.cfn.yml \
+        slhpc-dev-s3-buckets-for-io
+    ```
+
+7.  Deploy stacks for IAM roles and Batch.
+
+    ```sh
     $ rain deploy \
-        --params S3StackName=slhpc-dev-s3-buckets-for-batch-io \
+        --params S3StackName=slhpc-dev-s3-buckets-for-io \
         iam-roles-for-batch-services.cfn.yml \
         slhpc-dev-iam-roles-for-batch-services
     $ rain deploy \
@@ -52,7 +58,7 @@ Installation
         slhpc-dev-batch-for-hpc
     ```
 
-7.  Deploy stacks for VPC public subnets and a Nat gateway for internet access. (optional)
+8.  Deploy stacks for VPC public subnets and a Nat gateway for internet access. (optional)
 
     ```sh
     $ rain deploy \
@@ -61,7 +67,7 @@ Installation
         slhpc-dev-vpc-public
     ```
 
-8.  Deploy a Chatbot for AWS Step Functions. (optional)
+9.  Deploy a Chatbot for AWS Step Functions. (optional)
 
     ```sh
     $ rain deploy \
