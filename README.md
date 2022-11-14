@@ -32,7 +32,7 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=slhpc-dev \
-        aws-cfn-vpc-for-slc/vpc-private-subnets-and-s3-endpoint.cfn.yml \
+        aws-cfn-vpc-for-slc/vpc-private-subnets-with-s3-endpoint.cfn.yml \
         slhpc-dev-vpc-private
     ```
 
@@ -58,12 +58,12 @@ Installation
         slhpc-dev-batch-for-hpc
     ```
 
-8.  Deploy stacks for VPC public subnets and a Nat gateway for internet access. (optional)
+8.  Deploy stacks for VPC public subnets and a NAT gateway for internet access. (optional)
 
     ```sh
     $ rain deploy \
         --params VpcStackName=slhpc-dev-vpc-private,ProjectName=slhpc-dev \
-        aws-cfn-vpc-for-slc/vpc-public-subnets-and-nat-gateway.cfn.yml \
+        aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateway-in-1az.cfn.yml \
         slhpc-dev-vpc-public
     ```
 
