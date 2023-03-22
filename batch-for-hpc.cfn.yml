@@ -90,7 +90,7 @@ Resources:
           Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
-          - c6g
+          - c7g
           - m6g
           - r6g
       ServiceRole:
@@ -154,8 +154,7 @@ Resources:
           Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
         InstanceTypes:
-          - p4d
-          - g4dn
+          - g5g
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -238,7 +237,7 @@ Resources:
         InstanceRole:
           Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
-          - c6g
+          - c7g
           - m6g
           - r6g
       ServiceRole:
@@ -298,8 +297,7 @@ Resources:
         InstanceRole:
           Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
         InstanceTypes:
-          - p4d
-          - g4dn
+          - g5g
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
