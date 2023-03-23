@@ -2,23 +2,19 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: IAM roles for Batch, Lambda, and Step Functions
 Parameters:
-  SystemName:
-    Description: System Name.
+  ProjectName:
+    Description: Set the project name.
     Type: String
     Default: slhpc
-  EnvType:
-    Description: Environment Type.
-    Type: String
-    Default: dev
   S3StackName:
-    Description: S3 Stack Name.
+    Description: Set the S3 Stack Name.
     Type: String
-    Default: slhpc-dev-s3-buckets-for-batch-io
+    Default: slhpc-dev-s3-buckets-for-io
 Resources:
   BatchServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-BatchServiceRole
+      RoleName: !Sub ${ProjectName}-BatchServiceRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -34,7 +30,7 @@ Resources:
   BatchJobRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-BatchJobRole
+      RoleName: !Sub ${ProjectName}-BatchJobRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -45,7 +41,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-BatchJobRole-policy
+        - PolicyName: !Sub ${ProjectName}-BatchJobRole-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -104,7 +100,7 @@ Resources:
   BatchJobExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-BatchJobExecutionRole
+      RoleName: !Sub ${ProjectName}-BatchJobExecutionRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -119,7 +115,7 @@ Resources:
   BatchEc2InstanceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-BatchEc2InstanceRole
+      RoleName: !Sub ${ProjectName}-BatchEc2InstanceRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -130,7 +126,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-BatchEBS-policy
+        - PolicyName: !Sub ${ProjectName}-BatchEBS-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -154,7 +150,7 @@ Resources:
   BatchSpotFleetRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-BatchSpotFleetRole
+      RoleName: !Sub ${ProjectName}-BatchSpotFleetRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -169,7 +165,7 @@ Resources:
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-LambdaExecutionRole
+      RoleName: !Sub ${ProjectName}-LambdaExecutionRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -180,7 +176,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-LambdaExecutionRole-policy
+        - PolicyName: !Sub ${ProjectName}-LambdaExecutionRole-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -241,7 +237,7 @@ Resources:
   StepFunctionsExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${SystemName}-${EnvType}-StepFunctionsExecutionRole
+      RoleName: !Sub ${ProjectName}-StepFunctionsExecutionRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -250,7 +246,7 @@ Resources:
               Service: states.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-StepFunctionsExecutionRole-policy
+        - PolicyName: !Sub ${ProjectName}-StepFunctionsExecutionRole-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:

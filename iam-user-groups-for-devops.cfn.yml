@@ -2,26 +2,22 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: IAM user groups for devops
 Parameters:
-  SystemName:
-    Description: System Name.
+  ProjectName:
+    Description: Set the project name.
     Type: String
     Default: slhpc
-  EnvType:
-    Description: Environment Type.
-    Type: String
-    Default: dev
 Resources:
   DevGroup:
     Type: AWS::IAM::Group
     Properties:
-      GroupName: !Sub ${SystemName}-${EnvType}-developer-group
+      GroupName: !Sub ${ProjectName}-developer-group
       Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
         - arn:aws:iam::aws:policy/ReadOnlyAccess
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-developer-policy
+        - PolicyName: !Sub ${ProjectName}-developer-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -66,7 +62,7 @@ Resources:
   OpsGroup:
     Type: AWS::IAM::Group
     Properties:
-      GroupName: !Sub ${SystemName}-${EnvType}-operator-group
+      GroupName: !Sub ${ProjectName}-operator-group
       Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
@@ -78,7 +74,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSCloudTrailReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
       Policies:
-        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-batch-policy
+        - PolicyName: !Sub ${ProjectName}-operator-batch-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -90,11 +86,11 @@ Resources:
                   - batch:SubmitJob
                   - batch:CancelJob
                   - batch:TerminateJob
-              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${SystemName}*
+              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${ProjectName}*
                 Effect: Allow
                 Action:
                   - iam:PassRole
-        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-stepfunctions-policy
+        - PolicyName: !Sub ${ProjectName}-operator-stepfunctions-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -104,11 +100,11 @@ Resources:
                   - states:Describe*
                   - states:List*
                   - states:*Execution*
-              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${SystemName}*
+              - Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*${ProjectName}*
                 Effect: Allow
                 Action:
                   - iam:PassRole
-        - PolicyName: !Sub ${SystemName}-${EnvType}-operator-s3-policy
+        - PolicyName: !Sub ${ProjectName}-operator-s3-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -121,7 +117,7 @@ Resources:
                   - s3:GetBucketPublicAccessBlock
                   - s3:ListAccessPoints
                   - s3:ListAllMyBuckets
-              - Resource: !Sub arn:aws:s3:::${SystemName}-${EnvType}*
+              - Resource: !Sub arn:aws:s3:::${ProjectName}*
                 Effect: Allow
                 Action:
                   - s3:Describe*
@@ -129,7 +125,7 @@ Resources:
                   - s3:List*
                   - s3-object-lambda:Get*
                   - s3-object-lambda:List*
-              - Resource: !Sub arn:aws:s3:::${SystemName}-${EnvType}*/*
+              - Resource: !Sub arn:aws:s3:::${ProjectName}*/*
                 Effect: Allow
                 Action:
                   - s3:Describe*

@@ -2,24 +2,20 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Chatbot and SNS for Step Functions
 Parameters:
-  SystemName:
-    Description: System Name.
+  ProjectName:
+    Description: Set the project name.
     Type: String
     Default: slhpc
-  EnvType:
-    Description: Environment Type.
-    Type: String
-    Default: dev
   SnsTopicName:
-    Description: SNS Topic Name.
+    Description: Set the SNS Topic Name.
     Type: String
     Default: states-topic
   SlackWorkspaceId:
-    Description: Slack Workspace ID.
+    Description: Set the Slack Workspace ID.
     Type: String
     Default: XXXXXXXXX
   SlackChannelId:
-    Description: Slack Channel ID for AWS Step Functions.
+    Description: Set the Slack Channel ID for AWS Step Functions.
     Type: String
     Default: awsstepfunctions
 Resources:
@@ -54,7 +50,7 @@ Resources:
   ChatbotConfiguration:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:
-      ConfigurationName: !Sub ${SystemName}-${EnvType}-states-topic-chatbot-config
+      ConfigurationName: !Sub ${ProjectName}-states-topic-chatbot-config
       IamRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
       LoggingLevel: NONE
       SlackChannelId: !Ref SlackChannelId

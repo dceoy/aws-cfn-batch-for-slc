@@ -2,20 +2,16 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Batch for high-performance computing
 Parameters:
-  SystemName:
-    Description: System Name.
+  ProjectName:
+    Description: Set the project name.
     Type: String
     Default: slhpc
-  EnvType:
-    Description: Environment Type.
-    Type: String
-    Default: dev
   IamStackName:
-    Description: IAM Stack Name.
+    Description: Set the IAM Stack Name.
     Type: String
-    Default: slhpc-dev-iam-roles-for-batch-services
+    Default: slhpc-iam-roles-for-batch-services
   VpcStackName:
-    Description: Vpc Stack Name.
+    Description: Set the VPC Stack Name.
     Type: String
     Default: vpc-private-subnets-and-s3-endpoint
 Resources:
@@ -23,18 +19,18 @@ Resources:
   Ec2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub ${SystemName}-${EnvType}-ec2-security-group
-      GroupDescription: !Sub ${SystemName}-${EnvType}-ec2-security-group
+      GroupName: !Sub ${ProjectName}-ec2-security-group
+      GroupDescription: !Sub ${ProjectName}-ec2-security-group
       VpcId:
         Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-Vpc
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${EnvType}-ec2-security-group
+          Value: !Sub ${ProjectName}-ec2-security-group
   # EC2 Launch Template (AL2)
   Ec2LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+      LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
       LaunchTemplateData:
         BlockDeviceMappings:
           - DeviceName: /dev/xvda
@@ -51,7 +47,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate-spot
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-fargate-spot
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
@@ -68,7 +64,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton-spot
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-ec2-graviton-spot
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
@@ -78,7 +74,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -100,7 +96,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel-spot
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-ec2-intel-spot
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
@@ -110,7 +106,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -132,7 +128,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia-spot
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-ec2-nvidia-spot
       ComputeResources:
         AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
         BidPercentage: 100
@@ -142,7 +138,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -165,7 +161,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentFargateSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate-spot
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2GravitonSpot:
@@ -174,7 +170,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-graviton-spot
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2IntelSpot:
@@ -183,7 +179,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-intel-spot
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-intel-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2NvidiaSpot:
@@ -192,7 +188,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaSpot
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-nvidia-spot
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-spot
       Priority: 1
       State: ENABLED
   # Batch Compute Environments (OnDemand)
@@ -200,7 +196,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-fargate-ondemand
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-fargate-ondemand
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
@@ -217,7 +213,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-graviton-ondemand
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-ec2-graviton-ondemand
       ComputeResources:
         AllocationStrategy: BEST_FIT
         MinvCpus: 0
@@ -226,7 +222,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: EC2
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -247,7 +243,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-intel-ondemand
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-ec2-intel-ondemand
       ComputeResources:
         AllocationStrategy: BEST_FIT
         MinvCpus: 0
@@ -256,7 +252,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: EC2
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -277,7 +273,7 @@ Resources:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${SystemName}-${EnvType}-batch-compute-environment-ec2-nvidia-ondemand
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-ec2-nvidia-ondemand
       ComputeResources:
         AllocationStrategy: BEST_FIT
         MinvCpus: 0
@@ -286,7 +282,7 @@ Resources:
           - !Ref Ec2SecurityGroup
         Type: EC2
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${SystemName}-${EnvType}-ec2-launch-template
+          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -308,7 +304,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentFargateOnDemand
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-fargate-ondemand
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-ondemand
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2GravitonOnDemand:
@@ -317,7 +313,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonOnDemand
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-graviton-ondemand
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-ondemand
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2IntelOnDemand:
@@ -326,7 +322,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelOnDemand
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-intel-ondemand
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-intel-ondemand
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2NvidiaOnDemand:
@@ -335,7 +331,7 @@ Resources:
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaOnDemand
-      JobQueueName: !Sub ${SystemName}-${EnvType}-batch-job-queue-ec2-nvidia-ondemand
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-ondemand
       Priority: 1
       State: ENABLED
 Outputs:

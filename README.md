@@ -23,6 +23,7 @@ Installation
 
     ```sh
     $ rain deploy \
+        --params ProjectName=slhpc-dev \
         iam-user-groups-for-devops.cfn.yml \
         slhpc-dev-iam-user-groups-for-devops
     ```
@@ -49,11 +50,11 @@ Installation
 
     ```sh
     $ rain deploy \
-        --params S3StackName=slhpc-dev-s3-buckets-for-io \
+        --params ProjectName=slhpc-dev,S3StackName=slhpc-dev-s3-buckets-for-io \
         iam-roles-for-batch-services.cfn.yml \
         slhpc-dev-iam-roles-for-batch-services
     $ rain deploy \
-        --params IamStackName=slhpc-dev-iam-roles-for-batch-services,VpcStackName=slhpc-dev-vpc-private \
+        --params ProjectName=slhpc-dev,IamStackName=slhpc-dev-iam-roles-for-batch-services,VpcStackName=slhpc-dev-vpc-private \
         batch-for-hpc.cfn.yml \
         slhpc-dev-batch-for-hpc
     ```
@@ -62,7 +63,7 @@ Installation
 
     ```sh
     $ rain deploy \
-        --params VpcStackName=slhpc-dev-vpc-private,ProjectName=slhpc-dev \
+        --params ProjectName=slhpc-dev,VpcStackName=slhpc-dev-vpc-private \
         aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateway-in-1az.cfn.yml \
         slhpc-dev-vpc-public
     ```
