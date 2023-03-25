@@ -7,15 +7,15 @@ Parameters:
     Type: String
     Default: slhpc
   SnsTopicName:
-    Description: Set the SNS Topic Name.
+    Description: Set the SNS topic name.
     Type: String
     Default: states-topic
   SlackWorkspaceId:
-    Description: Set the Slack Workspace ID.
+    Description: Set the Slack workspace ID.
     Type: String
     Default: XXXXXXXXX
   SlackChannelId:
-    Description: Set the Slack Channel ID for AWS Step Functions.
+    Description: Set the Slack channel ID for AWS Step Functions.
     Type: String
     Default: awsstepfunctions
 Resources:

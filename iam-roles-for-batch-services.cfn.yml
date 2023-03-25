@@ -7,7 +7,7 @@ Parameters:
     Type: String
     Default: slhpc
   S3StackName:
-    Description: Set the S3 Stack Name.
+    Description: Set the S3 stack name.
     Type: String
     Default: slhpc-dev-s3-buckets-for-io
 Resources:

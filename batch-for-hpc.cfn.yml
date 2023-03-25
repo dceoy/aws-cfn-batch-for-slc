@@ -7,11 +7,11 @@ Parameters:
     Type: String
     Default: slhpc
   IamStackName:
-    Description: Set the IAM Stack Name.
+    Description: Set the IAM stack name.
     Type: String
     Default: slhpc-iam-roles-for-batch-services
-  VpcStackName:
-    Description: Set the VPC Stack Name.
+  VpcPrivateStackName:
+    Description: Set the VPC private subnet stack name.
     Type: String
     Default: vpc-private-subnets-and-s3-endpoint
 Resources:
@@ -43,9 +43,9 @@ Resources:
           - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: FARGATE_SPOT
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -66,9 +66,9 @@ Resources:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -98,9 +98,9 @@ Resources:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -130,9 +130,9 @@ Resources:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
@@ -192,9 +192,9 @@ Resources:
           - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: FARGATE
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -214,9 +214,9 @@ Resources:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -244,9 +244,9 @@ Resources:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -274,9 +274,9 @@ Resources:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
