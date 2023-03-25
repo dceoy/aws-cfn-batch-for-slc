@@ -17,7 +17,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
         - arn:aws:iam::aws:policy/ReadOnlyAccess
       Policies:
-        - PolicyName: !Sub ${ProjectName}-developer-policy
+        - PolicyName: !Sub ${ProjectName}-batch-developer-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -36,7 +36,7 @@ Resources:
                   StringEqualsIfExists:
                     iam:PassedToService:
                       - ecs-tasks.amazonaws.com
-        - PolicyName: stepfunctions-developer-policy
+        - PolicyName: !Sub ${ProjectName}-stepfunctions-developer-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -74,7 +74,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSCloudTrailReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
       Policies:
-        - PolicyName: !Sub ${ProjectName}-operator-batch-policy
+        - PolicyName: !Sub ${ProjectName}-batch-operator-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -90,7 +90,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - iam:PassRole
-        - PolicyName: !Sub ${ProjectName}-operator-stepfunctions-policy
+        - PolicyName: !Sub ${ProjectName}-stepfunctions-operator-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -104,7 +104,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - iam:PassRole
-        - PolicyName: !Sub ${ProjectName}-operator-s3-policy
+        - PolicyName: !Sub ${ProjectName}-s3-operator-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:

@@ -15,17 +15,6 @@ Parameters:
     Type: String
     Default: vpc-private-subnets-and-s3-endpoint
 Resources:
-  # EC2 Security Group
-  Ec2SecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub ${ProjectName}-ec2-security-group
-      GroupDescription: !Sub ${ProjectName}-ec2-security-group
-      VpcId:
-        Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-Vpc
-      Tags:
-        - Key: Name
-          Value: !Sub ${ProjectName}-ec2-security-group
   # EC2 Launch Template (AL2)
   Ec2LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
@@ -51,7 +40,7 @@ Resources:
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: FARGATE_SPOT
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -71,10 +60,10 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -103,10 +92,10 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -135,10 +124,10 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -200,7 +189,7 @@ Resources:
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: FARGATE
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -219,10 +208,10 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -249,10 +238,10 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -279,10 +268,10 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - !Ref Ec2SecurityGroup
+          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
-          LaunchTemplateName: !Sub ${ProjectName}-ec2-launch-template
+          LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
@@ -335,10 +324,6 @@ Resources:
       Priority: 1
       State: ENABLED
 Outputs:
-  Ec2SecurityGroup:
-    Value: !Ref Ec2SecurityGroup
-    Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-Ec2SecurityGroup
   Ec2LaunchTemplate:
     Value: !Ref Ec2LaunchTemplate
     Export:

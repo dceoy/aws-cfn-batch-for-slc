@@ -28,12 +28,12 @@ Installation
         slhpc-dev-iam-user-groups-for-devops
     ```
 
-5.  Deploy stacks for VPC private subnets and a VPC endpoint for S3.
+5.  Deploy stacks for VPC private subnets and VPC endpoints.
 
     ```sh
     $ rain deploy \
         --params ProjectName=slhpc-dev \
-        aws-cfn-vpc-for-slc/vpc-private-subnets-with-s3-endpoint.cfn.yml \
+        aws-cfn-vpc-for-slc/vpc-private-subnets-with-endpoints.cfn.yml \
         slhpc-dev-vpc-private
     ```
 
