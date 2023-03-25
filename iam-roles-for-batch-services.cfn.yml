@@ -130,15 +130,15 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              Effect: Allow
-              Action:
-                - ec2:createTags
-                - ec2:createVolume
-                - ec2:attachVolume
-                - ec2:deleteVolume
-                - ec2:modifyInstanceAttribute
-                - ec2:describeVolumes
-              Resource: '*'
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - ec2:createTags
+                  - ec2:createVolume
+                  - ec2:attachVolume
+                  - ec2:deleteVolume
+                  - ec2:modifyInstanceAttribute
+                  - ec2:describeVolumes
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
   BatchEc2InstanceProfile:
@@ -250,34 +250,34 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Effect: Allow
+              - Resource: '*'
+                Effect: Allow
                 Action:
                   - lambda:InvokeFunction
-                Resource: '*'
-              - Effect: Allow
+              - Resource: '*'
+                Effect: Allow
                 Action:
                   - states:StartExecution
-                Resource: '*'
-              - Effect: Allow
+              - Resource: '*'
+                Effect: Allow
                 Action:
                   - batch:SubmitJob
                   - batch:DescribeJobs
                   - batch:TerminateJob
-                Resource: '*'
-              - Effect: Allow
+              - Resource:
+                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForBatchJobsRule
+                Effect: Allow
                 Action:
                   - events:PutTargets
                   - events:PutRule
                   - events:DescribeRule
-                Resource:
-                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForBatchJobsRule
-              - Effect: Allow
+              - Resource: '*'
+                Effect: Allow
                 Action:
                   - xray:PutTraceSegments
                   - xray:PutTelemetryRecords
                   - xray:GetSamplingRules
                   - xray:GetSamplingTargets
-                Resource: '*'
 Outputs:
   BatchServiceRole:
     Value: !GetAtt BatchServiceRole.Arn
