@@ -59,12 +59,12 @@ Installation
         slhpc-dev-batch-for-hpc
     ```
 
-8.  Deploy stacks for VPC public subnets and a NAT gateway for internet access. (optional)
+8.  Deploy stacks for VPC public subnets and NAT gateways for internet access. (optional)
 
     ```sh
     $ rain deploy \
         --params ProjectName=slhpc-dev,VpcStackName=slhpc-dev-vpc-private \
-        aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateway-in-1az.cfn.yml \
+        aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateway-per-az.cfn.yml \
         slhpc-dev-vpc-public
     ```
 
