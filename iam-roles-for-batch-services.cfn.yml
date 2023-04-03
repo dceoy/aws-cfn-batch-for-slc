@@ -9,7 +9,7 @@ Parameters:
   S3StackName:
     Description: Set the S3 stack name.
     Type: String
-    Default: slhpc-dev-s3-buckets-for-io
+    Default: slhpc-s3-buckets-for-io
 Resources:
   BatchServiceRole:
     Type: AWS::IAM::Role
