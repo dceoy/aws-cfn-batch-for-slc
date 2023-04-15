@@ -10,10 +10,10 @@ Parameters:
     Description: Set the IAM stack name.
     Type: String
     Default: slhpc-iam-roles-for-batch-services
-  VpcPrivateStackName:
-    Description: Set the VPC private subnet stack name.
+  VpcStackName:
+    Description: Set the VPC stack name.
     Type: String
-    Default: slhpc-vpc-private-subnets-and-s3-endpoint
+    Default: slhpc-vpc-private-subnets-with-endpoints
 Resources:
   # EC2 Launch Template (AL2)
   Ec2LaunchTemplate:
@@ -40,12 +40,12 @@ Resources:
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: FARGATE_SPOT
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -60,15 +60,15 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -92,15 +92,15 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -124,15 +124,15 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
@@ -189,12 +189,12 @@ Resources:
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: FARGATE
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
       State: ENABLED
@@ -208,15 +208,15 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -238,15 +238,15 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
@@ -268,15 +268,15 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcPrivateStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
           Version: $Latest
         Subnets:
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet0
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet1
-          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcPrivateStackName}-PrivateSubnet2
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
