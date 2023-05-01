@@ -33,7 +33,7 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=slhpc-dev \
-        aws-cfn-vpc-for-slc/s3-buckets-for-io.cfn.yml \
+        aws-cfn-s3-for-io/s3-buckets-for-io.cfn.yml \
         slhpc-dev-s3-buckets-for-io
     ```
 

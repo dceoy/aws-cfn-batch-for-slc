@@ -40,14 +40,14 @@ Resources:
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: FARGATE_SPOT
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   BatchComputeEnvironmentEc2GravitonSpot:
     Type: AWS::Batch::ComputeEnvironment
@@ -60,7 +60,7 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
@@ -72,14 +72,15 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
-        SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+        SpotIamFleetRole:
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
           - c7g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   BatchComputeEnvironmentEc2IntelSpot:
     Type: AWS::Batch::ComputeEnvironment
@@ -92,7 +93,7 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
@@ -104,14 +105,15 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
-        SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+        SpotIamFleetRole:
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
           - m6i
           - c6i
           - r6i
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   BatchComputeEnvironmentEc2NvidiaSpot:
     Type: AWS::Batch::ComputeEnvironment
@@ -124,7 +126,7 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: SPOT
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
@@ -136,12 +138,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
-        SpotIamFleetRole: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRole
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+        SpotIamFleetRole:
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
           - g5g
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   # Batch Job Queues (Spot)
   BatchJobQueueFargateSpot:
@@ -189,14 +192,14 @@ Resources:
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: FARGATE
         Subnets:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet0
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   BatchComputeEnvironmentEc2GravitonOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -208,7 +211,7 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
@@ -220,13 +223,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
           - c7g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   BatchComputeEnvironmentEc2IntelOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -238,7 +241,7 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
@@ -250,13 +253,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
           - m6i
           - c6i
           - r6i
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   BatchComputeEnvironmentEc2NvidiaOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -268,7 +271,7 @@ Resources:
         MinvCpus: 0
         MaxvCpus: 2048
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${VpcStackName}-DefaultSecurityGroup
+          - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-DefaultSecurityGroup
         Type: EC2
         LaunchTemplate:
           LaunchTemplateId: !Ref Ec2LaunchTemplate
@@ -280,11 +283,11 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfile
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
           - g5g
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRole
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   # Batch Job Queues (OnDemand)
   BatchJobQueueFargateOnDemand:

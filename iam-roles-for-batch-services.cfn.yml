@@ -146,7 +146,7 @@ Resources:
     Properties:
       Path: /
       Roles:
-        - Ref: BatchEc2InstanceRole
+        - !Ref BatchEc2InstanceRole
   BatchSpotFleetRole:
     Type: AWS::IAM::Role
     Properties:
@@ -279,43 +279,35 @@ Resources:
                   - xray:GetSamplingRules
                   - xray:GetSamplingTargets
 Outputs:
-  BatchServiceRole:
+  BatchServiceRoleArn:
     Value: !GetAtt BatchServiceRole.Arn
-    Description: BatchServiceRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchServiceRole
-  BatchJobRole:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchServiceRoleArn
+  BatchJobRoleArn:
     Value: !GetAtt BatchJobRole.Arn
-    Description: BatchJobRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobRole
-  BatchJobExecutionRole:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobRoleArn
+  BatchJobExecutionRoleArn:
     Value: !GetAtt BatchJobExecutionRole.Arn
-    Description: BatchJobExecutionRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobExecutionRole
-  BatchEc2InstanceRole:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobExecutionRoleArn
+  BatchEc2InstanceRoleArn:
     Value: !GetAtt BatchEc2InstanceRole.Arn
-    Description: BatchEc2InstanceRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchEc2InstanceRole
-  BatchEc2InstanceProfile:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchEc2InstanceRoleArn
+  BatchEc2InstanceProfileArn:
     Value: !GetAtt BatchEc2InstanceProfile.Arn
-    Description: BatchEc2InstanceProfile
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchEc2InstanceProfile
-  BatchSpotFleetRole:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchEc2InstanceProfileArn
+  BatchSpotFleetRoleArn:
     Value: !GetAtt BatchSpotFleetRole.Arn
-    Description: BatchSpotFleetRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchSpotFleetRole
-  LambdaExecutionRole:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchSpotFleetRoleArn
+  LambdaExecutionRoleArn:
     Value: !GetAtt LambdaExecutionRole.Arn
-    Description: LambdaExecutionRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-LambdaExecutionRole
-  StepFunctionsExecutionRole:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-LambdaExecutionRoleArn
+  StepFunctionsExecutionRoleArn:
     Value: !GetAtt StepFunctionsExecutionRole.Arn
-    Description: StepFunctionsExecutionRole
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-StepFunctionsExecutionRole
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-StepFunctionsExecutionRoleArn

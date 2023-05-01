@@ -71,7 +71,6 @@ Resources:
         - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonGuardDutyReadOnlyAccess
-        - arn:aws:iam::aws:policy/AWSCloudTrailReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
       Policies:
         - PolicyName: !Sub ${ProjectName}-batch-operator-policy
@@ -137,3 +136,12 @@ Resources:
                   - s3-object-lambda:List*
                   - s3-object-lambda:*Object*
                   - s3-object-lambda:*MultipartUpload*
+Outputs:
+  DevGroup:
+    Value: !Ref DevGroup
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-DevGroup
+  OpsGroup:
+    Value: !Ref OpsGroup
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-OpsGroup
