@@ -9,7 +9,7 @@ Parameters:
   SnsTopicName:
     Description: Set the SNS topic name.
     Type: String
-    Default: states-topic
+    Default: stepfunctions-states-topic
   SlackWorkspaceId:
     Description: Set the Slack workspace ID.
     Type: String
@@ -57,3 +57,16 @@ Resources:
       SlackWorkspaceId: !Ref SlackWorkspaceId
       SnsTopicArns:
         - !Ref SnsTopic
+Outputs:
+  SnsTopic:
+    Value: !Ref SnsTopic
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-SnsTopic
+  EventRule:
+    Value: !Ref EventRule
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-EventRule
+  ChatbotConfiguration:
+    Value: !Ref ChatbotConfiguration
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-ChatbotConfiguration

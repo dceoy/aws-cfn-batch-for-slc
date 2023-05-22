@@ -51,15 +51,15 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=slhpc-dev \
-        aws-cfn-vpc-for-slc/vpc-private-subnets-with-endpoints.cfn.yml \
-        slhpc-dev-vpc-private-subnets-with-endpoints
+        aws-cfn-vpc-for-slc/vpc-private-subnets-with-gateway-endpoints.cfn.yml \
+        slhpc-dev-vpc-private-subnets-with-gateway-endpoints
     ```
 
 8.  Deploy stacks for Batch.
 
     ```sh
     $ rain deploy \
-        --params ProjectName=slhpc-dev,IamStackName=slhpc-dev-iam-roles-for-batch-services,VpcStackName=slhpc-dev-vpc-private-subnets-with-endpoints \
+        --params ProjectName=slhpc-dev,IamStackName=slhpc-dev-iam-roles-for-batch-services,VpcStackName=slhpc-dev-vpc-private-subnets-with-gateway-endpoints \
         batch-for-hpc.cfn.yml slhpc-dev-batch-for-hpc
     ```
 
@@ -67,7 +67,7 @@ Installation
 
     ```sh
     $ rain deploy \
-        --params ProjectName=slhpc-dev,VpcStackName=slhpc-dev-vpc-private-subnets-with-endpoints \
+        --params ProjectName=slhpc-dev,VpcStackName=slhpc-dev-vpc-private-subnets-with-gateway-endpoints \
         aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateway-per-az.cfn.yml \
         slhpc-dev-vpc-public-subnets-with-nat-gateway-per-az
     ```

@@ -15,7 +15,6 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
-        - arn:aws:iam::aws:policy/ReadOnlyAccess
       Policies:
         - PolicyName: !Sub ${ProjectName}-batch-developer-policy
           PolicyDocument:

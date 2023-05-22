@@ -13,7 +13,7 @@ Parameters:
   VpcStackName:
     Description: Set the VPC stack name.
     Type: String
-    Default: slhpc-vpc-private-subnets-with-endpoints
+    Default: slhpc-vpc-private-subnets-with-gateway-endpoints
 Resources:
   # EC2 Launch Template (AL2)
   Ec2LaunchTemplate:
