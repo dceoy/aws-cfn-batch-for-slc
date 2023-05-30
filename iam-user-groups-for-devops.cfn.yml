@@ -5,7 +5,7 @@ Parameters:
   ProjectName:
     Description: Set the project name.
     Type: String
-    Default: slhpc
+    Default: hpc
 Resources:
   DevGroup:
     Type: AWS::IAM::Group

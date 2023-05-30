@@ -5,11 +5,11 @@ Parameters:
   ProjectName:
     Description: Set the project name.
     Type: String
-    Default: slhpc
+    Default: hpc
   S3StackName:
     Description: Set the S3 stack name.
     Type: String
-    Default: slhpc-s3-buckets-for-io
+    Default: hpc-s3-buckets-for-io
 Resources:
   BatchServiceRole:
     Type: AWS::IAM::Role

@@ -5,15 +5,15 @@ Parameters:
   ProjectName:
     Description: Set the project name.
     Type: String
-    Default: slhpc
+    Default: hpc
   IamStackName:
     Description: Set the IAM stack name.
     Type: String
-    Default: slhpc-iam-roles-for-batch-services
+    Default: hpc-iam-roles-for-batch-services
   VpcStackName:
     Description: Set the VPC stack name.
     Type: String
-    Default: slhpc-vpc-private-subnets-with-gateway-endpoints
+    Default: hpc-vpc-private-subnets-with-gateway-endpoints
 Resources:
   # EC2 Launch Template (AL2)
   Ec2LaunchTemplate:
@@ -326,6 +326,11 @@ Resources:
       JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-ondemand
       Priority: 1
       State: ENABLED
+  BatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/batch/${ProjectName}-batch-job
+      RetentionInDays: 14
 Outputs:
   Ec2LaunchTemplate:
     Value: !Ref Ec2LaunchTemplate
@@ -395,3 +400,7 @@ Outputs:
     Value: !Ref BatchJobQueueEc2NvidiaOnDemand
     Export:
       Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2NvidiaOnDemand
+  BatchLogGroup:
+    Value: !Ref BatchLogGroup
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchLogGroup
