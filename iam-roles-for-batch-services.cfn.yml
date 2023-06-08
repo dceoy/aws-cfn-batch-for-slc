@@ -27,6 +27,86 @@ Resources:
       Path: /service-role/
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
+  S3AccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${ProjectName}-s3-access-policy
+      Roles:
+        - !Ref BatchJobRole
+        - !Ref LambdaExecutionRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Resource:
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
+                    - /*
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
+                    - /*
+            Effect: Allow
+            Action:
+              - s3:Get*
+              - s3:List*
+              - s3-object-lambda:Get*
+              - s3-object-lambda:List*
+          - Resource:
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
+                    - /*
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
+              - Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
+                    - /*
+            Effect: Allow
+            Action:
+              - s3:Get*
+              - s3:List*
+              - s3:PutObject*
+              - s3-object-lambda:Get*
+              - s3-object-lambda:List*
+              - s3-object-lambda:PutObject*
+  EfsAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${ProjectName}-efs-access-policy
+      Roles:
+        - !Ref BatchJobRole
+        - !Ref LambdaExecutionRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - elasticfilesystem:Describe*
+              - elasticfilesystem:List*
+              - elasticfilesystem:ClientMount
+              - elasticfilesystem:ClientWrite
+            Resource:
+              - !Sub arn:aws:elasticfilesystem:${AWS::Region}:${AWS::AccountId}:*/*
   BatchJobRole:
     Type: AWS::IAM::Role
     Properties:
@@ -40,63 +120,6 @@ Resources:
                 - ecs-tasks.amazonaws.com
             Action:
               - sts:AssumeRole
-      Policies:
-        - PolicyName: !Sub ${ProjectName}-BatchJobRole-policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Resource:
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
-                        - /*
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
-                        - /*
-                Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                  - s3-object-lambda:Get*
-                  - s3-object-lambda:List*
-              - Resource:
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
-                        - /*
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
-                        - /*
-                Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                  - s3:PutObject*
-                  - s3-object-lambda:Get*
-                  - s3-object-lambda:List*
-                  - s3-object-lambda:PutObject*
   BatchJobExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -125,8 +148,10 @@ Resources:
                 - ec2.amazonaws.com
             Action:
               - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
       Policies:
-        - PolicyName: !Sub ${ProjectName}-BatchEBS-policy
+        - PolicyName: !Sub ${ProjectName}-ebs-access-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -139,8 +164,6 @@ Resources:
                   - ec2:deleteVolume
                   - ec2:modifyInstanceAttribute
                   - ec2:describeVolumes
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
   BatchEc2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -175,63 +198,6 @@ Resources:
                 - lambda.amazonaws.com
             Action:
               - sts:AssumeRole
-      Policies:
-        - PolicyName: !Sub ${ProjectName}-LambdaExecutionRole-policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Resource:
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
-                        - /*
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
-                        - /*
-                Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                  - s3-object-lambda:Get*
-                  - s3-object-lambda:List*
-              - Resource:
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
-                        - /*
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
-                  - Fn::Join:
-                      - ''
-                      - - 'arn:aws:s3:::'
-                        - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
-                        - /*
-                Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                  - s3:PutObject*
-                  - s3-object-lambda:Get*
-                  - s3-object-lambda:List*
-                  - s3-object-lambda:PutObject*
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
   StepFunctionsExecutionRole:
@@ -246,7 +212,7 @@ Resources:
               Service: states.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub ${ProjectName}-StepFunctionsExecutionRole-policy
+        - PolicyName: !Sub ${ProjectName}-stepfunctions-execution-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:

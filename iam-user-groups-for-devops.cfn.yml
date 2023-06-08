@@ -16,7 +16,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
       Policies:
-        - PolicyName: !Sub ${ProjectName}-batch-developer-policy
+        - PolicyName: !Sub ${ProjectName}-batch-development-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -35,7 +35,7 @@ Resources:
                   StringEqualsIfExists:
                     iam:PassedToService:
                       - ecs-tasks.amazonaws.com
-        - PolicyName: !Sub ${ProjectName}-stepfunctions-developer-policy
+        - PolicyName: !Sub ${ProjectName}-stepfunctions-development-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -72,7 +72,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonGuardDutyReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
       Policies:
-        - PolicyName: !Sub ${ProjectName}-batch-operator-policy
+        - PolicyName: !Sub ${ProjectName}-batch-operation-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -88,7 +88,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - iam:PassRole
-        - PolicyName: !Sub ${ProjectName}-stepfunctions-operator-policy
+        - PolicyName: !Sub ${ProjectName}-stepfunctions-operation-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -102,7 +102,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - iam:PassRole
-        - PolicyName: !Sub ${ProjectName}-s3-operator-policy
+        - PolicyName: !Sub ${ProjectName}-s3-access-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -135,6 +135,18 @@ Resources:
                   - s3-object-lambda:List*
                   - s3-object-lambda:*Object*
                   - s3-object-lambda:*MultipartUpload*
+        - PolicyName: !Sub ${ProjectName}-efs-access-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:Describe*
+                  - elasticfilesystem:List*
+                  - elasticfilesystem:ClientMount
+                  - elasticfilesystem:ClientWrite
+                Resource:
+                  - !Sub arn:aws:elasticfilesystem:${AWS::Region}:${AWS::AccountId}:*/*
 Outputs:
   DevGroup:
     Value: !Ref DevGroup
