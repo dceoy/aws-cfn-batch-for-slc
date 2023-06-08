@@ -19,7 +19,7 @@ Installation
 
 3.  Set a Slack client on AWS Chatbot and get the Slack workspace ID. (optional)
 
-4.  Deploy stacks for IAM user groups. (optional)
+4.  Deploy stacks for IAM user group stacks. (optional)
 
     ```sh
     $ rain deploy \
@@ -72,7 +72,15 @@ Installation
         hpc-dev-vpc-public-subnets-with-nat-gateway-per-az
     ```
 
-10. Deploy a Chatbot for AWS Step Functions. (optional)
+10. Deploy stacks for EFS. (optional)
+
+    ```sh
+    $ rain deploy \
+        --params ProjectName=hpc-dev,VpcStackName=hpc-dev-vpc-private-subnets-with-gateway-endpoints \
+        aws-cfn-nfs/efs-with-access-point.cfn.yml hpc-dev-efs-with-access-point
+    ```
+
+11. Deploy a Chatbot for AWS Step Functions. (optional)
 
     ```sh
     $ rain deploy \
