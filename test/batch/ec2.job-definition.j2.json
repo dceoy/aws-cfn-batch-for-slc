@@ -1,0 +1,54 @@
+{
+  "jobDefinitionName": "{{ job_definition_name }}",
+  "type": "container",
+  "containerProperties": {
+    "image": "{{ image }}",
+    "command": [
+      "--version"
+    ],
+    "jobRoleArn": "{{ job_role_arn }}",
+    "executionRoleArn": "{{ execution_role_arn }}",
+    "environment": [
+      {
+        "name": "INPUT_DATA_DIR",
+        "value": "/input"
+      },
+      {
+        "name": "OUTPUT_DATA_DIR",
+        "value": "/output"
+      }
+    ],
+    "readonlyRootFilesystem": false,
+    "privileged": false,
+    "user": "root",
+    "resourceRequirements": [
+      {
+        "type": "VCPU",
+        "value": "1"
+      },
+      {
+        "type": "MEMORY",
+        "value": "2048"
+      }
+    ]
+  },
+  "retryStrategy": {
+    "attempts": 5,
+    "evaluateOnExit": [
+      {
+        "onStatusReason" :"Host EC2*",
+        "action": "RETRY"
+      },
+      {
+        "onReason" : "*",
+        "action": "EXIT"
+      }
+    ]
+  },
+  "timeout": {
+    "attemptDurationSeconds": 1209600
+  },
+  "platformCapabilities": [
+    "EC2"
+  ]
+}
