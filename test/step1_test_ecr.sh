@@ -27,12 +27,12 @@ oneTimeSetUp() {
 #   aws ecr delete-repository --repository-name "${IMAGE_NAME}" --force
 # }
 
-testCreateEcrRepository() {
+testCreatingEcrRepository() {
   aws ecr create-repository --repository-name "${IMAGE_NAME}"
   assertEquals 'aws ecr create-repository' 0 "${?}"
 }
 
-testLoginToEcr() {
+testEcrLogin() {
   aws ecr get-login-password --region "${AWS_REGION}" \
     | docker login --username AWS --password-stdin "${ECR_REGISTRY}"
   ps=("${PIPESTATUS[@]}")
@@ -40,7 +40,7 @@ testLoginToEcr() {
   assertEquals 'docker login' 0 "${ps[1]}"
 }
 
-testPushDockerImageToEcr() {
+testDockerImagePushToEcr() {
   docker image push "${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
   assertEquals 'docker image push' 0 "${?}"
   aws ecr describe-images --repository-name "${IMAGE_NAME}" --image-ids imageTag="${IMAGE_TAG}"
