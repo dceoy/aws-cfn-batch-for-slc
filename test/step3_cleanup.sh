@@ -18,3 +18,5 @@ for p in 'fargate' 'ec2'; do
     | xargs -t -I{} aws batch deregister-job-definition \
       --job-definition "${p}-${IMAGE_NAME}:{}"
 done
+
+rm -f tmp.*.job-definition.json
