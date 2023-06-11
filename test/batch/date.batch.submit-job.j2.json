@@ -3,11 +3,9 @@
     "command": [
       "--output-s3={{ test_s3_uri }}",
       "--outbound-sync-option='--quiet'",
-      "curl",
-      "-SL",
-      "-o",
-      "/output/global_ip.txt",
-      "ifconfig.me"
+      "bash",
+      "-c",
+      "\"date | tee /output/date_${AWS_BATCH_JOB_ARRAY_INDEX}.txt\""
     ],
     "environment": [
       {
@@ -30,8 +28,16 @@
       }
     ]
   },
+  "arrayProperties": {
+    "size": 5
+  },
+  "dependsOn": [
+    {
+      "type": "SEQUENTIAL"
+    }
+  ],
   "jobDefinition": "{{ job_definition }}",
-  "jobName": "curl",
+  "jobName": "date",
   "jobQueue": "{{ job_queue }}",
   "timeout": {
     "attemptDurationSeconds": 86400

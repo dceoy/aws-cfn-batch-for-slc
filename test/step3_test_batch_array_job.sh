@@ -12,6 +12,7 @@ BATCH_JOB_ROLE_ARN="${BATCH_JOB_ROLE_ARN:-arn:aws:iam::${AWS_ACCOUNT_ID}:role/${
 BATCH_JOB_EXECUTION_ROLE_ARN="${BATCH_JOB_EXECUTION_ROLE_ARN:-arn:aws:iam::${AWS_ACCOUNT_ID}:role/${PROJECT_NAME}-BatchJobExecutionRole}"
 TEST_S3_BUCKET="${INPUT_S3_URI:-${PROJECT_NAME}-output-${AWS_ACCOUNT_ID}}"
 WAIT_SECONDS="${WAIT_SECONDS:-3600}"
+BATCH_SUBMIT_JOB_JSON="${BATCH_SUBMIT_JOB_JSON:-batch/date.batch.submit-job.j2.json}"
 
 echo "PROJECT_NAME:                   ${PROJECT_NAME}"
 echo "IMAGE_NAME:                     ${IMAGE_NAME}"
@@ -36,26 +37,26 @@ echo "BATCH_JOB_EXECUTION_ROLE_ARN:   ${BATCH_JOB_EXECUTION_ROLE_ARN}"
 #   rm -f *.job-definition.json
 # }
 
-testBatchJobDefinition() {
-  for p in 'fargate' 'ec2'; do
-    jdn="${p}-${IMAGE_NAME}"
-    jq ".jobDefinitionName=\"${jdn}\"" < "./batch/${p}.job-definition.j2.json" \
-      | jq ".containerProperties.image=\"${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}\"" \
-      | jq ".containerProperties.jobRoleArn=\"${BATCH_JOB_ROLE_ARN}\"" \
-      | jq ".containerProperties.executionRoleArn=\"${BATCH_JOB_EXECUTION_ROLE_ARN}\"" \
-      > "tmp.${jdn}.job-definition.json"
-    aws batch register-job-definition \
-      --cli-input-json "file://tmp.${jdn}.job-definition.json" \
-      | tee "tmp.${jdn}.job-definition.output.json"
-    assertEquals 'aws batch register-job-definition' 0 "${PIPESTATUS[0]}"
-    assertNotNull 'aws batch describe-job-definitions' "$( \
-      jq '.revision' < "tmp.${jdn}.job-definition.output.json" \
-        | xargs -I{} aws batch describe-job-definitions --job-definitions \
-          "arn:aws:batch:${AWS_REGION}:${AWS_ACCOUNT_ID}:job-definition/${jdn}:{}" \
-        | jq '.jobDefinitions[] | select(.status == "ACTIVE")' \
-    )"
-  done
-}
+# testBatchJobDefinition() {
+#   for p in 'fargate' 'ec2'; do
+#     jdn="${p}-${IMAGE_NAME}"
+#     jq ".jobDefinitionName=\"${jdn}\"" < "./batch/${p}.job-definition.j2.json" \
+#       | jq ".containerProperties.image=\"${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}\"" \
+#       | jq ".containerProperties.jobRoleArn=\"${BATCH_JOB_ROLE_ARN}\"" \
+#       | jq ".containerProperties.executionRoleArn=\"${BATCH_JOB_EXECUTION_ROLE_ARN}\"" \
+#       > "tmp.${jdn}.job-definition.json"
+#     aws batch register-job-definition \
+#       --cli-input-json "file://tmp.${jdn}.job-definition.json" \
+#       | tee "tmp.${jdn}.job-definition.output.json"
+#     assertEquals 'aws batch register-job-definition' 0 "${PIPESTATUS[0]}"
+#     assertNotNull 'aws batch describe-job-definitions' "$( \
+#       jq '.revision' < "tmp.${jdn}.job-definition.output.json" \
+#         | xargs -I{} aws batch describe-job-definitions --job-definitions \
+#           "arn:aws:batch:${AWS_REGION}:${AWS_ACCOUNT_ID}:job-definition/${jdn}:{}" \
+#         | jq '.jobDefinitions[] | select(.status == "ACTIVE")' \
+#     )"
+#   done
+# }
 
 testBatchJobSubmit() {
   for p in 'fargate' 'ec2'; do
@@ -67,12 +68,12 @@ testBatchJobSubmit() {
     jdn="$(jq -r '.jobDefinitionName' < "tmp.${p}-${IMAGE_NAME}.job-definition.output.json")"
     jdr="$(jq -r '.revision' < "tmp.${p}-${IMAGE_NAME}.job-definition.output.json")"
     [[ -n "${jdn}" ]] && [[ -n "${jdr}" ]] || exit 1
-    jq ".jobDefinition=\"${jdn}:${jdr}\"" < batch/curl.batch.submit-job.j2.json \
+    jq ".jobDefinition=\"${jdn}:${jdr}\"" < "${BATCH_SUBMIT_JOB_JSON}" \
       | jq ".jobQueue=\"${job_queue}\"" \
       | jq ".containerOverrides.command[0]=\"--output-s3=s3://${TEST_S3_BUCKET}/tmp/${jdn}/\"" \
-      > "tmp.${jdn}.curl.batch.submit-job.json"
-    aws batch submit-job --cli-input-json "file://tmp.${jdn}.curl.batch.submit-job.json" \
-      | tee "tmp.${jdn}.curl.batch.submit-job.output.json"
+      > "tmp.${jdn}.${BATCH_SUBMIT_JOB_JSON##*/}"
+    aws batch submit-job --cli-input-json "file://tmp.${jdn}.${BATCH_SUBMIT_JOB_JSON##*/}" \
+      | tee "tmp.${jdn}.${BATCH_SUBMIT_JOB_JSON##*/}.output.json"
     assertEquals 'aws batch submit-job' 0 "${PIPESTATUS[0]}"
   done
 }
@@ -80,7 +81,7 @@ testBatchJobSubmit() {
 testBatchJobStatus() {
   end_seconds=$((SECONDS + WAIT_SECONDS))
   for p in 'fargate' 'ec2'; do
-    ji=$(jq -r '.jobId' < "tmp.${p}-${IMAGE_NAME}.curl.batch.submit-job.output.json")
+    ji=$(jq -r '.jobId' < "tmp.${p}-${IMAGE_NAME}.${BATCH_SUBMIT_JOB_JSON##*/}.output.json")
     [[ -n "${ji}" ]] || exit 1
     js=''
     while [[ ${SECONDS} -lt ${end_seconds} ]]; do
@@ -98,11 +99,13 @@ testBatchJobStatus() {
 
 testBatchJobOutput() {
   for p in 'fargate' 'ec2'; do
-    aws s3 cp \
-      "s3://${TEST_S3_BUCKET}/tmp/${p}-${IMAGE_NAME}/global_ip.txt" \
-      "tmp.${p}-${IMAGE_NAME}.global_ip.txt"
-    assertEquals 'aws s3 cp' 0 "${?}"
-    assertNotNull 'aws s3 cp' "$(cat "tmp.${p}-${IMAGE_NAME}.global_ip.txt")"
+    for i in {0..4}; do
+      aws s3 cp \
+        "s3://${TEST_S3_BUCKET}/tmp/${p}-${IMAGE_NAME}/date_${i}.txt" \
+        "tmp.${p}-${IMAGE_NAME}.date_${i}.txt"
+      assertEquals 'aws s3 cp' 0 "${?}"
+      assertTrue 'aws s3 cp' "[[ -s 'tmp.${p}-${IMAGE_NAME}.date_${i}.txt' ]]"
+    done
   done
 }
 
