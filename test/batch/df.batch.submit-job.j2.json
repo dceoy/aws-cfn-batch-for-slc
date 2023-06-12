@@ -1,0 +1,37 @@
+{
+  "containerOverrides": {
+    "command": [
+      "--output-s3={{ test_s3_uri }}",
+      "--outbound-sync-option='--quiet'",
+      "bash",
+      "-c",
+      "\"df -Th | tee /output/df_Th.txt\""
+    ],
+    "environment": [
+      {
+        "name": "INPUT_DATA_DIR",
+        "value": "/input"
+      },
+      {
+        "name": "OUTPUT_DATA_DIR",
+        "value": "/output"
+      }
+    ],
+    "resourceRequirements": [
+      {
+        "type": "MEMORY",
+        "value": "2048"
+      },
+      {
+        "type": "VCPU",
+        "value": "1"
+      }
+    ]
+  },
+  "jobDefinition": "{{ job_definition }}",
+  "jobName": "date",
+  "jobQueue": "{{ job_queue }}",
+  "timeout": {
+    "attemptDurationSeconds": 86400
+  }
+}

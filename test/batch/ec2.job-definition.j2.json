@@ -30,6 +30,26 @@
         "type": "MEMORY",
         "value": "2048"
       }
+    ],
+    "mountPoints": [
+      {
+        "sourceVolume": "main-efs-volume",
+        "containerPath": "/mnt/efs",
+        "readOnly": false
+      }
+    ],
+    "volumes": [
+      {
+        "name": "main-efs-volume",
+        "efsVolumeConfiguration": {
+          "fileSystemId": "{{ efs_file_system_id }}",
+          "rootDirectory": "/",
+          "transitEncryption": "ENABLED",
+          "authorizationConfig": {
+            "accessPointId": "{{ efs_access_point_id }}"
+          }
+        }
+      }
     ]
   },
   "retryStrategy": {
