@@ -59,7 +59,14 @@
           }
         }
       }
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "{{ awslogs_group }}",
+        "awslogs-stream-prefix": "{{ awslogs_stream_prefix }}"
+      }
+    }
   },
   "retryStrategy": {
     "attempts": 5,

@@ -10,6 +10,7 @@ AWS_REGION="$(aws configure get region)"
 ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 BATCH_JOB_ROLE_ARN="${BATCH_JOB_ROLE_ARN:-arn:aws:iam::${AWS_ACCOUNT_ID}:role/${PROJECT_NAME}-BatchJobRole}"
 BATCH_JOB_EXECUTION_ROLE_ARN="${BATCH_JOB_EXECUTION_ROLE_ARN:-arn:aws:iam::${AWS_ACCOUNT_ID}:role/${PROJECT_NAME}-BatchJobExecutionRole}"
+AWSLOGS_GROUP="/aws/batch/${PROJECT_NAME}-batch-job"
 efs_ap_json="$( \
   aws efs describe-access-points \
     | jq ".AccessPoints[] | select(.Name == \"${PROJECT_NAME}-efs-accesspoint\")" \
@@ -51,6 +52,8 @@ testBatchJobDefinition() {
       | jq ".containerProperties.executionRoleArn=\"${BATCH_JOB_EXECUTION_ROLE_ARN}\"" \
       | jq ".containerProperties.volumes[0].efsVolumeConfiguration.fileSystemId=\"${EFS_FS_ID}\"" \
       | jq ".containerProperties.volumes[0].efsVolumeConfiguration.authorizationConfig.accessPointId=\"${EFS_AP_ID}\"" \
+      | jq ".containerProperties.logConfiguration.options.\"awslogs-group\"=\"${AWSLOGS_GROUP}\"" \
+      | jq ".containerProperties.logConfiguration.options.\"awslogs-stream-prefix\"=\"${jdn}\"" \
       > "tmp.${jdn}.job-definition.json"
     aws batch register-job-definition \
       --cli-input-json "file://tmp.${jdn}.job-definition.json" \
