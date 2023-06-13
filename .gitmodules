@@ -6,4 +6,4 @@
 	url = https://github.com/dceoy/aws-cfn-s3-for-io.git
 [submodule "aws-cfn-nfs"]
 	path = aws-cfn-nfs
-	url = git@github.com:dceoy/aws-cfn-nfs.git
+	url = https://github.com/dceoy/aws-cfn-nfs.git
