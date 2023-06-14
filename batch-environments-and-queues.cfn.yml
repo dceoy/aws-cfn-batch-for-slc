@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Batch for high-performance computing
+Description: Batch environments and queues
 Parameters:
   ProjectName:
     Description: Set the project name.
@@ -9,11 +9,11 @@ Parameters:
   IamStackName:
     Description: Set the IAM stack name.
     Type: String
-    Default: hpc-iam-roles-for-batch-services
+    Default: iam-roles-for-batch-services
   VpcStackName:
     Description: Set the VPC stack name.
     Type: String
-    Default: hpc-vpc-private-subnets-with-gateway-endpoints
+    Default: vpc-private-subnets-with-gateway-endpoints
 Resources:
   # EC2 Launch Template (AL2)
   Ec2LaunchTemplate:
@@ -32,11 +32,11 @@ Resources:
               DeleteOnTermination: true
         InstanceInitiatedShutdownBehavior: terminate
   # Batch Compute Environments (Spot)
-  BatchComputeEnvironmentFargateSpot:
+  BatchComputeEnvironmentFargateIntelSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-fargate-spot
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-fargate-intel-spot
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
@@ -147,13 +147,13 @@ Resources:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   # Batch Job Queues (Spot)
-  BatchJobQueueFargateSpot:
+  BatchJobQueueFargateIntelSpot:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref BatchComputeEnvironmentFargateSpot
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-spot
+          ComputeEnvironment: !Ref BatchComputeEnvironmentFargateIntelSpot
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-intel-spot
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2GravitonSpot:
@@ -184,11 +184,11 @@ Resources:
       Priority: 1
       State: ENABLED
   # Batch Compute Environments (OnDemand)
-  BatchComputeEnvironmentFargateOnDemand:
+  BatchComputeEnvironmentFargateIntelOnDemand:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
       Type: MANAGED
-      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-fargate-ondemand
+      ComputeEnvironmentName: !Sub ${ProjectName}-batch-compute-environment-fargate-intel-ondemand
       ComputeResources:
         MaxvCpus: 2048
         SecurityGroupIds:
@@ -290,13 +290,13 @@ Resources:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
   # Batch Job Queues (OnDemand)
-  BatchJobQueueFargateOnDemand:
+  BatchJobQueueFargateIntelOnDemand:
     Type: AWS::Batch::JobQueue
     Properties:
       ComputeEnvironmentOrder:
         - Order: 1
-          ComputeEnvironment: !Ref BatchComputeEnvironmentFargateOnDemand
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-ondemand
+          ComputeEnvironment: !Ref BatchComputeEnvironmentFargateIntelOnDemand
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-intel-ondemand
       Priority: 1
       State: ENABLED
   BatchJobQueueEc2GravitonOnDemand:
@@ -336,10 +336,10 @@ Outputs:
     Value: !Ref Ec2LaunchTemplate
     Export:
       Name: !Sub ${AWS::Region}-${AWS::StackName}-Ec2LaunchTemplate
-  BatchComputeEnvironmentFargateSpot:
-    Value: !Ref BatchComputeEnvironmentFargateSpot
+  BatchComputeEnvironmentFargateIntelSpot:
+    Value: !Ref BatchComputeEnvironmentFargateIntelSpot
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentFargateSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentFargateIntelSpot
   BatchComputeEnvironmentEc2GravitonSpot:
     Value: !Ref BatchComputeEnvironmentEc2GravitonSpot
     Export:
@@ -352,10 +352,10 @@ Outputs:
     Value: !Ref BatchComputeEnvironmentEc2NvidiaSpot
     Export:
       Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaSpot
-  BatchJobQueueFargateSpot:
-    Value: !Ref BatchJobQueueFargateSpot
+  BatchJobQueueFargateIntelSpot:
+    Value: !Ref BatchJobQueueFargateIntelSpot
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueFargateSpot
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueFargateIntelSpot
   BatchJobQueueEc2GravitonSpot:
     Value: !Ref BatchJobQueueEc2GravitonSpot
     Export:
@@ -368,10 +368,10 @@ Outputs:
     Value: !Ref BatchJobQueueEc2NvidiaSpot
     Export:
       Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueEc2NvidiaSpot
-  BatchComputeEnvironmentFargateOnDemand:
-    Value: !Ref BatchComputeEnvironmentFargateOnDemand
+  BatchComputeEnvironmentFargateIntelOnDemand:
+    Value: !Ref BatchComputeEnvironmentFargateIntelOnDemand
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentFargateOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentFargateIntelOnDemand
   BatchComputeEnvironmentEc2GravitonOnDemand:
     Value: !Ref BatchComputeEnvironmentEc2GravitonOnDemand
     Export:
@@ -384,10 +384,10 @@ Outputs:
     Value: !Ref BatchComputeEnvironmentEc2NvidiaOnDemand
     Export:
       Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchComputeEnvironmentEc2NvidiaOnDemand
-  BatchJobQueueFargateOnDemand:
-    Value: !Ref BatchJobQueueFargateOnDemand
+  BatchJobQueueFargateIntelOnDemand:
+    Value: !Ref BatchJobQueueFargateIntelOnDemand
     Export:
-      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueFargateOnDemand
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BatchJobQueueFargateIntelOnDemand
   BatchJobQueueEc2GravitonOnDemand:
     Value: !Ref BatchJobQueueEc2GravitonOnDemand
     Export:

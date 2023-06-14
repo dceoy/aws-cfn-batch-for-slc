@@ -9,7 +9,7 @@ Parameters:
   S3StackName:
     Description: Set the S3 stack name.
     Type: String
-    Default: hpc-s3-buckets-for-io
+    Default: s3-buckets-with-access-logger
 Resources:
   BatchServiceRole:
     Type: AWS::IAM::Role

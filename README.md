@@ -33,15 +33,15 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=hpc-dev \
-        aws-cfn-s3-for-io/s3-buckets-for-io.cfn.yml \
-        hpc-dev-s3-buckets-for-io
+        aws-cfn-s3-for-io/s3-buckets-with-access-logger.cfn.yml \
+        hpc-dev-s3-buckets-with-access-logger
     ```
 
 6.  Deploy stacks for IAM roles.
 
     ```sh
     $ rain deploy \
-        --params ProjectName=hpc-dev,S3StackName=hpc-dev-s3-buckets-for-io \
+        --params ProjectName=hpc-dev,S3StackName=hpc-dev-s3-buckets-with-access-logger \
         iam-roles-for-batch-services.cfn.yml \
         hpc-dev-iam-roles-for-batch-services
     ```
@@ -60,7 +60,7 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=hpc-dev,IamStackName=hpc-dev-iam-roles-for-batch-services,VpcStackName=hpc-dev-vpc-private-subnets-with-gateway-endpoints \
-        batch-for-hpc.cfn.yml hpc-dev-batch-for-hpc
+        batch-environments-and-queues.cfn.yml hpc-dev-batch-environments-and-queues
     ```
 
 9.  Deploy stacks for VPC public subnets and NAT gateways for internet access. (optional)

@@ -27,14 +27,9 @@ testBatchJobSubmit() {
     [[ -f "tmp.${p}-${IMAGE_NAME}.job-definition.output.json" ]] || exit 1
     jdn="$(jq -r '.jobDefinitionName' < "tmp.${p}-${IMAGE_NAME}.job-definition.output.json")"
     jdr="$(jq -r '.revision' < "tmp.${p}-${IMAGE_NAME}.job-definition.output.json")"
-    if [[ "${p}" == 'ec2' ]]; then
-      job_queue="${PROJECT_NAME}-batch-job-queue-${p}-intel-spot"
-    else
-      job_queue="${PROJECT_NAME}-batch-job-queue-${p}-spot"
-    fi
     [[ -n "${jdn}" ]] && [[ -n "${jdr}" ]] || exit 1
     jq ".jobDefinition=\"${jdn}:${jdr}\"" < "${BATCH_SUBMIT_JOB_JSON}" \
-      | jq ".jobQueue=\"${job_queue}\"" \
+      | jq ".jobQueue=\"${PROJECT_NAME}-batch-job-queue-${p}-intel-spot\"" \
       | jq ".containerOverrides.command[0]=\"--output-s3=s3://${TEST_S3_BUCKET}/tmp/${jdn}/\"" \
       > "tmp.${jdn}.${BATCH_SUBMIT_JOB_JSON##*/}"
     aws batch submit-job --cli-input-json "file://tmp.${jdn}.${BATCH_SUBMIT_JOB_JSON##*/}" \
