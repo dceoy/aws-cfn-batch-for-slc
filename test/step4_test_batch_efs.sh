@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -eu
 
 PROJECT_NAME="${PROJECT_NAME:-hpc-dev}"
 IMAGE_NAME="${IMAGE_NAME:-test-s3-sync}"
@@ -8,6 +8,8 @@ AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 TEST_S3_BUCKET="${INPUT_S3_URI:-${PROJECT_NAME}-output-${AWS_ACCOUNT_ID}}"
 TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-3600}"
 BATCH_SUBMIT_JOB_JSON="${BATCH_SUBMIT_JOB_JSON:-batch/df.batch.submit-job.j2.json}"
+
+set +e
 
 echo "PROJECT_NAME:                   ${PROJECT_NAME}"
 echo "IMAGE_NAME:                     ${IMAGE_NAME}"

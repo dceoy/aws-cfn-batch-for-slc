@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -eu
 
 PROJECT_NAME="${PROJECT_NAME:-hpc-dev}"
 IMAGE_NAME="${IMAGE_NAME:-test-s3-sync}"
@@ -17,6 +17,8 @@ efs_ap_json="$( \
 )"
 EFS_FS_ID="$(echo "${efs_ap_json}" | jq -r '.FileSystemId')"
 EFS_AP_ID="$(echo "${efs_ap_json}" | jq -r '.AccessPointId')"
+
+set +e
 
 echo "PROJECT_NAME:                   ${PROJECT_NAME}"
 echo "IMAGE_NAME:                     ${IMAGE_NAME}"
