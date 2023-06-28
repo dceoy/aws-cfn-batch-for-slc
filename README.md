@@ -41,7 +41,7 @@ Installation
 
     ```sh
     $ rain deploy \
-        --params ProjectName=hpc-dev,S3StackName=hpc-dev-s3-buckets-with-access-logger \
+        --params ProjectName=hpc-dev \
         iam-roles-for-batch-services.cfn.yml \
         hpc-dev-iam-roles-for-batch-services
     ```

@@ -6,10 +6,6 @@ Parameters:
     Description: Set the project name.
     Type: String
     Default: hpc
-  S3StackName:
-    Description: Set the S3 stack name.
-    Type: String
-    Default: s3-buckets-with-access-logger
 Resources:
   BatchServiceRole:
     Type: AWS::IAM::Role
@@ -37,51 +33,18 @@ Resources:
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Resource:
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-InputBucket
-                    - /*
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ReferenceBucket
-                    - /*
-            Effect: Allow
+          - Effect: Allow
             Action:
               - s3:Get*
               - s3:List*
               - s3-object-lambda:Get*
               - s3-object-lambda:List*
-          - Resource:
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-OutputBucket
-                    - /*
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
-              - Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Fn::ImportValue: !Sub ${AWS::Region}-${S3StackName}-ArchiveBucket
-                    - /*
-            Effect: Allow
+            Resource:
+              - !Sub arn:aws:s3:::${ProjectName}-input-${AWS::AccountId}
+              - !Sub arn:aws:s3:::${ProjectName}-input-${AWS::AccountId}/*
+              - !Sub arn:aws:s3:::${ProjectName}-reference-${AWS::AccountId}
+              - !Sub arn:aws:s3:::${ProjectName}-reference-${AWS::AccountId}/*
+          - Effect: Allow
             Action:
               - s3:Get*
               - s3:List*
@@ -89,6 +52,11 @@ Resources:
               - s3-object-lambda:Get*
               - s3-object-lambda:List*
               - s3-object-lambda:PutObject*
+            Resource:
+              - !Sub arn:aws:s3:::${ProjectName}-output-${AWS::AccountId}
+              - !Sub arn:aws:s3:::${ProjectName}-output-${AWS::AccountId}/*
+              - !Sub arn:aws:s3:::${ProjectName}-archive-${AWS::AccountId}
+              - !Sub arn:aws:s3:::${ProjectName}-archive-${AWS::AccountId}/*
   EfsAccessPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -103,10 +71,20 @@ Resources:
             Action:
               - elasticfilesystem:Describe*
               - elasticfilesystem:List*
+            Resource: '*'
+            Condition:
+              StringEquals:
+                aws:ResourceTag/Name: !Sub ${ProjectName}-efs-filesystem
+          - Effect: Allow
+            Action:
+              - elasticfilesystem:Describe*
+              - elasticfilesystem:List*
               - elasticfilesystem:ClientMount
               - elasticfilesystem:ClientWrite
-            Resource:
-              - !Sub arn:aws:elasticfilesystem:${AWS::Region}:${AWS::AccountId}:*/*
+            Resource: '*'
+            Condition:
+              StringEquals:
+                aws:ResourceTag/Name: !Sub ${ProjectName}-efs-accesspoint
   BatchJobRole:
     Type: AWS::IAM::Role
     Properties:
@@ -155,8 +133,7 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Resource: '*'
-                Effect: Allow
+              - Effect: Allow
                 Action:
                   - ec2:createTags
                   - ec2:createVolume
@@ -164,6 +141,7 @@ Resources:
                   - ec2:deleteVolume
                   - ec2:modifyInstanceAttribute
                   - ec2:describeVolumes
+                Resource: '*'
   BatchEc2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -216,34 +194,34 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Resource: '*'
-                Effect: Allow
+              - Effect: Allow
                 Action:
                   - lambda:InvokeFunction
-              - Resource: '*'
-                Effect: Allow
+                Resource: '*'
+              - Effect: Allow
                 Action:
                   - states:StartExecution
-              - Resource: '*'
-                Effect: Allow
+                Resource: '*'
+              - Effect: Allow
                 Action:
                   - batch:SubmitJob
                   - batch:DescribeJobs
                   - batch:TerminateJob
-              - Resource:
-                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForBatchJobsRule
-                Effect: Allow
+                Resource: '*'
+              - Effect: Allow
                 Action:
                   - events:PutTargets
                   - events:PutRule
                   - events:DescribeRule
-              - Resource: '*'
-                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForBatchJobsRule
+              - Effect: Allow
                 Action:
                   - xray:PutTraceSegments
                   - xray:PutTelemetryRecords
                   - xray:GetSamplingRules
                   - xray:GetSamplingTargets
+                Resource: '*'
 Outputs:
   BatchServiceRoleArn:
     Value: !GetAtt BatchServiceRole.Arn

@@ -24,7 +24,7 @@ Resources:
         BlockDeviceMappings:
           - DeviceName: /dev/xvda
             Ebs:
-              VolumeSize: 2000
+              VolumeSize: 1000
               VolumeType: gp3
               Iops: 16000
               Throughput: 500
@@ -142,7 +142,7 @@ Resources:
         SpotIamFleetRole:
           Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
-          - g5g
+          - g5g   # g5
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
@@ -285,7 +285,7 @@ Resources:
         InstanceRole:
           Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
-          - g5g
+          - g5g   # g5
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
