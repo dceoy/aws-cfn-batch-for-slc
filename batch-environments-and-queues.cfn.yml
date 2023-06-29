@@ -49,6 +49,9 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-fargate-intel-spot
+        ProjectName: !Ref ProjectName
   BatchComputeEnvironmentEc2GravitonSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
@@ -82,6 +85,9 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-ec2-graviton-spot
+        ProjectName: !Ref ProjectName
   BatchComputeEnvironmentEc2IntelSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
@@ -115,6 +121,9 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-ec2-intel-spot
+        ProjectName: !Ref ProjectName
   BatchComputeEnvironmentEc2NvidiaSpot:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
@@ -146,43 +155,58 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-ec2-nvidia-spot
+        ProjectName: !Ref ProjectName
   # Batch Job Queues (Spot)
   BatchJobQueueFargateIntelSpot:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-intel-spot
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentFargateIntelSpot
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-intel-spot
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-fargate-intel-spot
+        ProjectName: !Ref ProjectName
   BatchJobQueueEc2GravitonSpot:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-spot
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonSpot
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-spot
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-spot
+        ProjectName: !Ref ProjectName
   BatchJobQueueEc2IntelSpot:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-intel-spot
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelSpot
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-intel-spot
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-ec2-intel-spot
+        ProjectName: !Ref ProjectName
   BatchJobQueueEc2NvidiaSpot:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-spot
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaSpot
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-spot
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-spot
+        ProjectName: !Ref ProjectName
   # Batch Compute Environments (OnDemand)
   BatchComputeEnvironmentFargateIntelOnDemand:
     Type: AWS::Batch::ComputeEnvironment
@@ -201,6 +225,9 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-fargate-intel-ondemand
+        ProjectName: !Ref ProjectName
   BatchComputeEnvironmentEc2GravitonOnDemand:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
@@ -231,6 +258,9 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-ec2-graviton-ondemand
+        ProjectName: !Ref ProjectName
   BatchComputeEnvironmentEc2IntelOnDemand:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
@@ -261,6 +291,9 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-ec2-intel-ondemand
+        ProjectName: !Ref ProjectName
   BatchComputeEnvironmentEc2NvidiaOnDemand:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
@@ -289,48 +322,68 @@ Resources:
       ServiceRole:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-compute-environment-ec2-nvidia-ondemand
+        ProjectName: !Ref ProjectName
   # Batch Job Queues (OnDemand)
   BatchJobQueueFargateIntelOnDemand:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-intel-ondemand
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentFargateIntelOnDemand
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-fargate-intel-ondemand
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-fargate-intel-ondemand
+        ProjectName: !Ref ProjectName
   BatchJobQueueEc2GravitonOnDemand:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-ondemand
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2GravitonOnDemand
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-ondemand
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-ec2-graviton-ondemand
+        ProjectName: !Ref ProjectName
   BatchJobQueueEc2IntelOnDemand:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-intel-ondemand
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2IntelOnDemand
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-intel-ondemand
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-ec2-intel-ondemand
+        ProjectName: !Ref ProjectName
   BatchJobQueueEc2NvidiaOnDemand:
     Type: AWS::Batch::JobQueue
     Properties:
+      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-ondemand
       ComputeEnvironmentOrder:
         - Order: 1
           ComputeEnvironment: !Ref BatchComputeEnvironmentEc2NvidiaOnDemand
-      JobQueueName: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-ondemand
       Priority: 1
       State: ENABLED
+      Tags:
+        Name: !Sub ${ProjectName}-batch-job-queue-ec2-nvidia-ondemand
+        ProjectName: !Ref ProjectName
   BatchLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/batch/${ProjectName}-batch-job
       RetentionInDays: 14
+      Tags:
+        - Key: Name
+          Value: !Sub /aws/batch/${ProjectName}-batch-job
+        - Key: ProjectName
+          Value: !Ref ProjectName
 Outputs:
   Ec2LaunchTemplate:
     Value: !Ref Ec2LaunchTemplate

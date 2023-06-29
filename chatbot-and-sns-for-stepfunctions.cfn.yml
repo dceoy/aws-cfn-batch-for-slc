@@ -22,7 +22,12 @@ Resources:
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub ${SnsTopicName}
+      TopicName: !Ref SnsTopicName
+      Tags:
+        - Key: Name
+          Value: !Ref SnsTopicName
+        - Key: ProjectName
+          Value: !Ref ProjectName
   SnsTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:

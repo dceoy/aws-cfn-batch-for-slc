@@ -23,6 +23,11 @@ Resources:
       Path: /service-role/
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-BatchServiceRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
   S3AccessPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -98,6 +103,11 @@ Resources:
                 - ecs-tasks.amazonaws.com
             Action:
               - sts:AssumeRole
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-BatchJobRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
   BatchJobExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -113,6 +123,11 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-BatchJobExecutionRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
   BatchEc2InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -142,6 +157,11 @@ Resources:
                   - ec2:modifyInstanceAttribute
                   - ec2:describeVolumes
                 Resource: '*'
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-BatchEc2InstanceRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
   BatchEc2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -163,6 +183,11 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-BatchSpotFleetRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -178,6 +203,11 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-LambdaExecutionRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
   StepFunctionsExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -222,6 +252,11 @@ Resources:
                   - xray:GetSamplingRules
                   - xray:GetSamplingTargets
                 Resource: '*'
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-StepFunctionsExecutionRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
 Outputs:
   BatchServiceRoleArn:
     Value: !GetAtt BatchServiceRole.Arn

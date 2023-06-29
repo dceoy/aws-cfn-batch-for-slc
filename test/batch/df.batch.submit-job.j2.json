@@ -29,7 +29,7 @@
     ]
   },
   "jobDefinition": "{{ job_definition }}",
-  "jobName": "date",
+  "jobName": "df",
   "jobQueue": "{{ job_queue }}",
   "timeout": {
     "attemptDurationSeconds": 86400

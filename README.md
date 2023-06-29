@@ -84,6 +84,7 @@ Installation
 
     ```sh
     $ rain deploy \
+        --params ProjectName=hpc-dev,SnsTopicName=stepfunctions-states-topic \
         chatbot-and-sns-for-stepfunctions.cfn.yml \
         hpc-dev-chatbot-and-sns-for-stepfunctions
     ```
