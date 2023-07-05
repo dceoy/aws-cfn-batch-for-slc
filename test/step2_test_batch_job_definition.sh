@@ -56,6 +56,7 @@ testBatchJobDefinition() {
       | jq ".containerProperties.volumes[0].efsVolumeConfiguration.authorizationConfig.accessPointId=\"${EFS_AP_ID}\"" \
       | jq ".containerProperties.logConfiguration.options.\"awslogs-group\"=\"${AWSLOGS_GROUP}\"" \
       | jq ".containerProperties.logConfiguration.options.\"awslogs-stream-prefix\"=\"${jdn}\"" \
+      | jq ".tags.ProjectName=\"${PROJECT_NAME}\"" \
       > "tmp.${jdn}.job-definition.json"
     aws batch register-job-definition \
       --cli-input-json "file://tmp.${jdn}.job-definition.json" \

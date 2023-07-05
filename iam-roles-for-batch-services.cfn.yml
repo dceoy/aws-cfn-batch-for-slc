@@ -40,6 +40,7 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
+              - s3:Describe*
               - s3:Get*
               - s3:List*
               - s3-object-lambda:Get*
@@ -51,6 +52,7 @@ Resources:
               - !Sub arn:aws:s3:::${ProjectName}-reference-${AWS::AccountId}/*
           - Effect: Allow
             Action:
+              - s3:Describe*
               - s3:Get*
               - s3:List*
               - s3:PutObject*
@@ -76,20 +78,12 @@ Resources:
             Action:
               - elasticfilesystem:Describe*
               - elasticfilesystem:List*
-            Resource: '*'
-            Condition:
-              StringEquals:
-                aws:ResourceTag/Name: !Sub ${ProjectName}-efs-filesystem
-          - Effect: Allow
-            Action:
-              - elasticfilesystem:Describe*
-              - elasticfilesystem:List*
               - elasticfilesystem:ClientMount
               - elasticfilesystem:ClientWrite
             Resource: '*'
             Condition:
               StringEquals:
-                aws:ResourceTag/Name: !Sub ${ProjectName}-efs-accesspoint
+                aws:ResourceTag/ProjectName: !Ref ProjectName
   BatchJobRole:
     Type: AWS::IAM::Role
     Properties:
@@ -165,6 +159,7 @@ Resources:
   BatchEc2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
+      InstanceProfileName: !Sub ${ProjectName}-BatchEc2InstanceProfile
       Path: /
       Roles:
         - !Ref BatchEc2InstanceRole
@@ -228,16 +223,25 @@ Resources:
                 Action:
                   - lambda:InvokeFunction
                 Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
               - Effect: Allow
                 Action:
                   - states:StartExecution
                 Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
               - Effect: Allow
                 Action:
                   - batch:SubmitJob
                   - batch:DescribeJobs
                   - batch:TerminateJob
                 Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
               - Effect: Allow
                 Action:
                   - events:PutTargets

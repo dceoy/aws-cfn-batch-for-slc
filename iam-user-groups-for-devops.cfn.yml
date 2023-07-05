@@ -38,6 +38,8 @@ Resources:
                   - batch:List*
                   - batch:RegisterJobDefinition
                   - batch:DeregisterJobDefinition
+                  - batch:TagResource
+                  - batch:UntagResource
                 Resource: '*'
               - Effect: Allow
                 Action:
@@ -55,6 +57,11 @@ Resources:
                 Action:
                   - lambda:Describe*
                   - lambda:List*
+                  - lambda:TagResource
+                  - lambda:UntagResource
+                Resource: '*'
+              - Effect: Allow
+                Action:
                   - lambda:CreateFunction
                   - lambda:DeleteFunction
                   - lambda:GetFunction
@@ -62,6 +69,9 @@ Resources:
                   - lambda:UpdateFunctionCode
                   - lambda:UpdateFunctionConfiguration
                 Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
               - Effect: Allow
                 Action:
                   - iam:PassRole
@@ -78,10 +88,18 @@ Resources:
                 Action:
                   - states:Describe*
                   - states:List*
+                  - states:TagResource
+                  - states:UntagResource
+                Resource: '*'
+              - Effect: Allow
+                Action:
                   - states:CreateStateMachine
                   - states:DeleteStateMachine
                   - states:UpdateStateMachine
                 Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
               - Effect: Allow
                 Action:
                   - iam:PassRole
@@ -112,14 +130,23 @@ Resources:
                 Action:
                   - batch:Describe*
                   - batch:List*
+                Resource: '*'
+              - Effect: Allow
+                Action:
                   - batch:SubmitJob
                   - batch:CancelJob
                   - batch:TerminateJob
                 Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
               - Effect: Allow
                 Action:
                   - iam:PassRole
-                Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-*
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
         - PolicyName: !Sub ${ProjectName}-stepfunctions-operation-policy
           PolicyDocument:
             Version: 2012-10-17
@@ -128,45 +155,43 @@ Resources:
                 Action:
                   - states:Describe*
                   - states:List*
-                  - states:*Execution*
                 Resource: '*'
               - Effect: Allow
                 Action:
+                  - states:*Execution*
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
+              - Effect: Allow
+                Action:
                   - iam:PassRole
-                Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-*
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
         - PolicyName: !Sub ${ProjectName}-s3-access-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
-                  - s3:GetAccountPublicAccessBlock
-                  - s3:GetBucketAcl
-                  - s3:GetBucketPolicyStatus
-                  - s3:GetBucketPublicAccessBlock
-                  - s3:ListAccessPoints
-                  - s3:ListAllMyBuckets
+                  - s3:Describe*
+                  - s3:List*
+                  - s3-object-lambda:List*
                 Resource: '*'
               - Effect: Allow
                 Action:
-                  - s3:Describe*
                   - s3:Get*
-                  - s3:List*
-                  - s3-object-lambda:Get*
-                  - s3-object-lambda:List*
-                Resource: !Sub arn:aws:s3:::${ProjectName}-*
-              - Effect: Allow
-                Action:
-                  - s3:Describe*
-                  - s3:Get*
-                  - s3:List*
                   - s3:*Object*
                   - s3:*MultipartUpload*
                   - s3-object-lambda:Get*
-                  - s3-object-lambda:List*
                   - s3-object-lambda:*Object*
                   - s3-object-lambda:*MultipartUpload*
-                Resource: !Sub arn:aws:s3:::${ProjectName}-*/*
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
         - PolicyName: !Sub ${ProjectName}-efs-access-policy
           PolicyDocument:
             Version: 2012-10-17
@@ -182,8 +207,8 @@ Resources:
                   - elasticfilesystem:ClientWrite
                 Resource: '*'
                 Condition:
-                  StringLike:
-                    aws:ResourceTag/Name: !Sub ${ProjectName}-*
+                  StringEquals:
+                    aws:ResourceTag/ProjectName: !Ref ProjectName
 Outputs:
   DevGroup:
     Value: !Ref DevGroup

@@ -59,6 +59,10 @@
       }
     }
   },
+  "propagateTags": true,
+  "tags": {
+    "ProjectName": "{{ project_name }}"
+  },
   "retryStrategy": {
     "attempts": 5,
     "evaluateOnExit": [
