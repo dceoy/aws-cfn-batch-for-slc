@@ -18,6 +18,8 @@ efs_ap_json="$( \
 EFS_FS_ID="$(echo "${efs_ap_json}" | jq -r '.FileSystemId')"
 EFS_AP_ID="$(echo "${efs_ap_json}" | jq -r '.AccessPointId')"
 
+[[ -n "${EFS_FS_ID}" ]] && [[ -n "${EFS_AP_ID}" ]] || exit 1
+
 set +e
 
 echo "PROJECT_NAME:                   ${PROJECT_NAME}"
