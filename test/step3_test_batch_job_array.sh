@@ -63,10 +63,10 @@ testBatchJobOutput() {
   for p in 'fargate' 'ec2'; do
     for i in {0..4}; do
       aws s3 cp \
-        "s3://${TEST_S3_BUCKET}/tmp/${p}-${IMAGE_NAME}/date_${i}.txt" \
-        "tmp.${p}-${IMAGE_NAME}.date_${i}.txt"
+        "s3://${TEST_S3_BUCKET}/tmp/${p}-${IMAGE_NAME}/date_array${i}.txt" \
+        "tmp.${p}-${IMAGE_NAME}.date_array${i}.txt"
       assertEquals 'aws s3 cp' 0 "${?}"
-      assertTrue 'aws s3 cp' "[[ -s 'tmp.${p}-${IMAGE_NAME}.date_${i}.txt' ]]"
+      assertTrue 'aws s3 cp' "[[ -s 'tmp.${p}-${IMAGE_NAME}.date_array${i}.txt' ]]"
     done
   done
 }

@@ -5,7 +5,7 @@
       "--outbound-sync-option='--quiet'",
       "bash",
       "-c",
-      "\"date | tee /output/date_${AWS_BATCH_JOB_ARRAY_INDEX}.txt\""
+      "\"date | tee /output/date_array${AWS_BATCH_JOB_ARRAY_INDEX}.txt\""
     ],
     "environment": [
       {
