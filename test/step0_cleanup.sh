@@ -19,6 +19,18 @@ for p in 'fargate' 'ec2'; do
     | xargs -t -I{} aws batch deregister-job-definition \
       --job-definition "${p}-${IMAGE_NAME}:{}" || :
   aws s3 rm --recursive "s3://${TEST_S3_BUCKET}/tmp/${p}-${IMAGE_NAME}/" || :
+  aws s3api list-object-versions \
+    --bucket "${TEST_S3_BUCKET}" \
+    --prefix "tmp/${p}-${IMAGE_NAME}/" \
+    | jq -rc '.DeleteMarkers[] | .Key, .VersionId' \
+    | xargs -L2 bash -xc \
+      "aws s3api delete-object --bucket ${TEST_S3_BUCKET} --key \${0} --version-id \${1}" || :
+  aws s3api list-object-versions \
+    --bucket "${TEST_S3_BUCKET}" \
+    --prefix "tmp/${p}-${IMAGE_NAME}/" \
+    | jq -rc '.Versions[] | .Key, .VersionId' \
+    | xargs -L2 bash -xc \
+      "aws s3api delete-object --bucket ${TEST_S3_BUCKET} --key \${0} --version-id \${1}" || :
 done
 
 rm -f tmp.*

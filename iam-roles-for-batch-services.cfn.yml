@@ -76,8 +76,6 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - elasticfilesystem:Describe*
-              - elasticfilesystem:List*
               - elasticfilesystem:ClientMount
               - elasticfilesystem:ClientWrite
             Resource: '*'
