@@ -56,7 +56,6 @@ testBatchJobDefinition() {
       | jq ".containerProperties.executionRoleArn=\"${BATCH_JOB_EXECUTION_ROLE_ARN}\"" \
       | jq ".containerProperties.volumes[0].efsVolumeConfiguration.fileSystemId=\"${EFS_FS_ID}\"" \
       | jq ".containerProperties.volumes[0].efsVolumeConfiguration.authorizationConfig.accessPointId=\"${EFS_AP_ID}\"" \
-      | jq ".containerProperties.volumes[0].efsVolumeConfiguration.authorizationConfig.iam=\"ENABLED\"" \
       | jq ".containerProperties.logConfiguration.options.\"awslogs-group\"=\"${AWSLOGS_GROUP}\"" \
       | jq ".containerProperties.logConfiguration.options.\"awslogs-stream-prefix\"=\"${jdn}\"" \
       | jq ".tags.ProjectName=\"${PROJECT_NAME}\"" \

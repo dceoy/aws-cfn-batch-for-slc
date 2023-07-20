@@ -46,7 +46,8 @@
           "rootDirectory": "/",
           "transitEncryption": "ENABLED",
           "authorizationConfig": {
-            "accessPointId": "{{ efs_access_point_id }}"
+            "accessPointId": "{{ efs_access_point_id }}",
+            "iam": "ENABLED"
           }
         }
       }
