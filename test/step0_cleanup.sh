@@ -22,13 +22,7 @@ for p in 'fargate' 'ec2'; do
   aws s3api list-object-versions \
     --bucket "${TEST_S3_BUCKET}" \
     --prefix "tmp/${p}-${IMAGE_NAME}/" \
-    | jq -rc '.DeleteMarkers[] | .Key, .VersionId' \
-    | xargs -L2 bash -xc \
-      "aws s3api delete-object --bucket ${TEST_S3_BUCKET} --key \${0} --version-id \${1}" || :
-  aws s3api list-object-versions \
-    --bucket "${TEST_S3_BUCKET}" \
-    --prefix "tmp/${p}-${IMAGE_NAME}/" \
-    | jq -rc '.Versions[] | .Key, .VersionId' \
+    | jq -rc '.Versions[], .DeleteMarkers[] | .Key, .VersionId' \
     | xargs -L2 bash -xc \
       "aws s3api delete-object --bucket ${TEST_S3_BUCKET} --key \${0} --version-id \${1}" || :
 done
