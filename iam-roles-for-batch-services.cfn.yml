@@ -259,6 +259,41 @@ Resources:
           Value: !Sub ${ProjectName}-StepFunctionsExecutionRole
         - Key: ProjectName
           Value: !Ref ProjectName
+  BudgetsActionExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-BudgetsActionExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - budgets.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSBudgetsActionsWithAWSResourceControlAccess
+      Policies:
+        - PolicyName: !Sub ${ProjectName}-budgets-action-execution-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:AttachGroupPolicy
+                  # - iam:AttachRolePolicy
+                  # - iam:AttachUserPolicy
+                  - iam:DetachGroupPolicy
+                  # - iam:DetachRolePolicy
+                  # - iam:DetachUserPolicy
+                Resource:
+                  - !Sub arn:aws:iam::${AWS::AccountId}:group/${ProjectName}-*
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-BudgetsActionExecutionRole
+        - Key: ProjectName
+          Value: !Ref ProjectName
 Outputs:
   BatchServiceRoleArn:
     Value: !GetAtt BatchServiceRole.Arn
@@ -292,3 +327,7 @@ Outputs:
     Value: !GetAtt StepFunctionsExecutionRole.Arn
     Export:
       Name: !Sub ${AWS::Region}-${AWS::StackName}-StepFunctionsExecutionRoleArn
+  BudgetsActionExecutionRoleArn:
+    Value: !GetAtt BudgetsActionExecutionRole.Arn
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BudgetsActionExecutionRoleArn

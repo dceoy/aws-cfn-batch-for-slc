@@ -6,8 +6,8 @@ Parameters:
     Description: Set the project name.
     Type: String
     Default: hpc
-  IamStackName:
-    Description: Set the IAM stack name.
+  IamRoleStackName:
+    Description: Set the IAM role stack name.
     Type: String
     Default: iam-roles-for-batch-services
   VpcStackName:
@@ -47,7 +47,7 @@ Resources:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-fargate-intel-spot
@@ -75,15 +75,15 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchEc2InstanceProfileArn
         SpotIamFleetRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
           - c7g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-ec2-graviton-spot
@@ -111,15 +111,15 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchEc2InstanceProfileArn
         SpotIamFleetRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
           - m6i
           - c6i
           - r6i
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-ec2-intel-spot
@@ -147,13 +147,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchEc2InstanceProfileArn
         SpotIamFleetRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchSpotFleetRoleArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchSpotFleetRoleArn
         InstanceTypes:
           - g5g   # g5
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-ec2-nvidia-spot
@@ -223,7 +223,7 @@ Resources:
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet1
           - Fn::ImportValue: !Sub ${AWS::Region}-${VpcStackName}-PrivateSubnet2
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-fargate-intel-ondemand
@@ -250,13 +250,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
           - c7g
           - m6g
           - r6g
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-ec2-graviton-ondemand
@@ -283,13 +283,13 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
           - m6i
           - c6i
           - r6i
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-ec2-intel-ondemand
@@ -316,11 +316,11 @@ Resources:
         Ec2Configuration:
           - ImageType: ECS_AL2_NVIDIA
         InstanceRole:
-          Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchEc2InstanceProfileArn
+          Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchEc2InstanceProfileArn
         InstanceTypes:
           - g5g   # g5
       ServiceRole:
-        Fn::ImportValue: !Sub ${AWS::Region}-${IamStackName}-BatchServiceRoleArn
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BatchServiceRoleArn
       State: ENABLED
       Tags:
         Name: !Sub ${ProjectName}-batch-compute-environment-ec2-nvidia-ondemand

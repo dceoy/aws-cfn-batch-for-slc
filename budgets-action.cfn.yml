@@ -1,0 +1,141 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Budget and Budgets Action
+Parameters:
+  ProjectName:
+    Description: Set the project name.
+    Type: String
+    Default: hpc
+  IamRoleStackName:
+    Description: Set the IAM role stack name.
+    Type: String
+    Default: iam-roles-for-batch-services
+  IamGroupStackName:
+    Description: Set the IAM group stack name.
+    Type: String
+    Default: iam-user-groups-for-devops
+  BudgetLimitAmount:
+    Description: Set the budget limit amount in USD,
+    Type: Number
+    Default: 100
+  BudgetNotificationThreshold:
+    Description: Set the budget percentage threshold for notification.
+    Type: Number
+    MinValue: 0
+    MaxValue: 100
+    Default: 50
+  BudgetActionThreshold:
+    Description: Set the budget percentage threshold for action.
+    Type: Number
+    MinValue: 0
+    MaxValue: 100
+    Default: 75
+  SnsTopicName:
+    Description: Set the SNS topic name.
+    Type: String
+    Default: budgets-topic
+  SlackWorkspaceId:
+    Description: Set the Slack workspace ID.
+    Type: String
+    Default: XXXXXXXXX
+  SlackChannelId:
+    Description: Set the Slack channel ID for AWS Step Functions.
+    Type: String
+    Default: awsbudgets
+Resources:
+  Budget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: !Sub ${ProjectName}-budgets-budget
+        BudgetType: COST
+        BudgetLimit:
+          Amount: !Ref BudgetLimitAmount
+          Unit: USD
+        TimeUnit: MONTHLY   # ANNUALLY | DAILY | MONTHLY | QUARTERLY
+        # CostTypes:
+        #   IncludeCredit: true
+        #   IncludeDiscount: true
+        #   IncludeOtherSubscription: true
+        #   IncludeRecurring: true
+        #   IncludeRefund: true
+        #   IncludeSubscription: true
+        #   IncludeSupport: true
+        #   IncludeTax: true
+        #   IncludeUpfront: true
+        #   UseAmortized: false
+        #   UseBlended: false
+        # CostFilters: Json
+        # PlannedBudgetLimits: Json
+        # TimePeriod:
+        #   Start: String
+        #   End: String
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            ThresholdType: PERCENTAGE
+            Threshold: !Ref BudgetNotificationThreshold
+          Subscribers:
+            - SubscriptionType: SNS
+              Address: !Ref SnsTopic
+  BudgetsAction:
+    Type: AWS::Budgets::BudgetsAction
+    Properties:
+      BudgetName: !Ref Budget
+      ActionType: APPLY_IAM_POLICY  # APPLY_IAM_POLICY | APPLY_SCP_POLICY | RUN_SSM_DOCUMENTS
+      ActionThreshold:
+        Type: PERCENTAGE
+        Value: !Ref BudgetActionThreshold
+      ApprovalModel: AUTOMATIC  # AUTOMATIC | MANUAL
+      ExecutionRoleArn:
+        Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BudgetsActionExecutionRoleArn
+      Definition:
+        IamActionDefinition:
+          PolicyArn: arn:aws:iam::aws:policy/AWSDenyAll
+          # Users:
+          #   - String
+          # Roles:
+          #   - String
+          Groups:
+            - Fn::ImportValue: !Sub ${AWS::Region}-${IamGroupStackName}-OpsGroup
+      NotificationType: ACTUAL
+      Subscribers:
+        - Type: SNS
+          Address: !Ref SnsTopic
+  SnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Ref SnsTopicName
+      Tags:
+        - Key: Name
+          Value: !Ref SnsTopicName
+        - Key: ProjectName
+          Value: !Ref ProjectName
+  ChatbotConfiguration:
+    Type: AWS::Chatbot::SlackChannelConfiguration
+    Properties:
+      ConfigurationName: !Sub ${ProjectName}-${SnsTopicName}-chatbot-config
+      IamRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot
+      LoggingLevel: NONE
+      SlackChannelId: !Ref SlackChannelId
+      SlackWorkspaceId: !Ref SlackWorkspaceId
+      SnsTopicArns:
+        - !Ref SnsTopic
+Outputs:
+  Budget:
+    Value: !Ref Budget
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-Budget
+  BudgetsAction:
+    Value: !Ref BudgetsAction
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-BudgetsAction
+  SnsTopic:
+    Value: !Ref SnsTopic
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-SnsTopic
+  ChatbotConfiguration:
+    Value: !Ref ChatbotConfiguration
+    Export:
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-ChatbotConfiguration
