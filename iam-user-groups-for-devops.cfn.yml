@@ -156,6 +156,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonGuardDutyReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSBudgetsReadOnlyAccess
       Policies:
         - PolicyName: !Sub ${ProjectName}-batch-operation-policy
           PolicyDocument:
