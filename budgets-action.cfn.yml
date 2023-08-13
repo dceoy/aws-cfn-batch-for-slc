@@ -92,7 +92,8 @@ Resources:
         Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-BudgetsActionExecutionRoleArn
       Definition:
         IamActionDefinition:
-          PolicyArn: arn:aws:iam::aws:policy/AWSDenyAll
+          PolicyArn:
+            Fn::ImportValue: !Sub ${AWS::Region}-${IamRoleStackName}-DenyActionsPolicyArn
           # Users:
           #   - String
           # Roles:
