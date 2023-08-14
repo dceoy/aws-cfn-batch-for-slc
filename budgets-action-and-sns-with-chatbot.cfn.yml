@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Budget and Budgets Action
+Description: Budget, Budgets Action, and SNS with Chatbot
 Parameters:
   ProjectName:
     Description: Set the project name.
@@ -126,7 +126,7 @@ Resources:
             Principal:
               Service: budgets.amazonaws.com
             Action:
-              - sns:publish
+              - sns:Publish
             Resource:
               - !Ref SnsTopic
             Condition:

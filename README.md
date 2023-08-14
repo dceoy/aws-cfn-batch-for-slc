@@ -85,8 +85,8 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=hpc-dev \
-        chatbot-and-sns-for-stepfunctions.cfn.yml \
-        hpc-dev-chatbot-and-sns-for-stepfunctions
+        sns-with-chatbot-for-stepfunctions.cfn.yml \
+        hpc-dev-sns-with-chatbot-for-stepfunctions.cfn.yml
     ```
 
 12. Deploy stacks for Budgets Action. (optional)
@@ -94,5 +94,6 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=hpc-dev,IamRoleStackName=hpc-dev-iam-roles-for-batch-services,IamGroupStackName=hpc-dev-iam-user-groups-for-devops \
-        budgets-action.cfn.yml hpc-dev-budgets-action
+        budgets-action-and-sns-with-chatbot.cfn.yml \
+        hpc-dev-budgets-action-and-sns-with-chatbot
     ```

@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Chatbot and SNS for Step Functions
+Description: SNS with Chatbot for Step Functions
 Parameters:
   ProjectName:
     Description: Set the project name.
@@ -37,10 +37,11 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service:
-                - events.amazonaws.com
-            Action: sns:Publish
-            Resource: !Ref SnsTopic
+              Service: events.amazonaws.com
+            Action:
+              - sns:Publish
+            Resource:
+              - !Ref SnsTopic
       Topics:
         - !Ref SnsTopic
   EventRule:
