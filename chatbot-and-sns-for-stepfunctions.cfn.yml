@@ -23,6 +23,7 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: !Ref SnsTopicName
+      DisplayName: !Ref SnsTopicName
       Tags:
         - Key: Name
           Value: !Ref SnsTopicName

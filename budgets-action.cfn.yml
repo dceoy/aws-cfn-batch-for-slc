@@ -108,11 +108,32 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: !Ref SnsTopicName
+      DisplayName: !Ref SnsTopicName
       Tags:
         - Key: Name
           Value: !Ref SnsTopicName
         - Key: ProjectName
           Value: !Ref ProjectName
+  SnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref SnsTopic
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: budgets.amazonaws.com
+            Action:
+              - sns:publish
+            Resource:
+              - !Ref SnsTopic
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+              ArnLike:
+                aws:SourceArn: !Sub arn:aws:budgets::${AWS::AccountId}:*
   ChatbotConfiguration:
     Type: AWS::Chatbot::SlackChannelConfiguration
     Properties:
