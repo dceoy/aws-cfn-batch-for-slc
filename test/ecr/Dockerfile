@@ -1,14 +1,16 @@
-FROM quay.io/centos/centos:stream
+FROM public.ecr.aws/ubuntu/ubuntu:latest
 
 ADD https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip /tmp/awscli.zip
 ADD https://raw.githubusercontent.com/dceoy/s3-sync-entrypoint/main/s3-sync-entrypoint /usr/local/bin/s3-sync-entrypoint
 
 RUN set -e \
-      && dnf -y upgrade \
-      && dnf -y install \
-        curl unzip \
-      && dnf clean all \
-      && rm -rf /var/cache/dnf/*
+      && apt-get -y update \
+      && apt-get -y dist-upgrade \
+      && apt-get -y install --no-install-recommends --no-install-suggests \
+        ca-certificates curl unzip \
+      && apt-get -y autoremove \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 RUN set -e \
       && unzip -d /tmp /tmp/awscli.zip \
