@@ -97,3 +97,11 @@ Installation
         budgets-action-and-sns-with-chatbot.cfn.yml \
         hpc-dev-budgets-action-and-sns-with-chatbot
     ```
+
+13. Enable ECR image scanning. (optional)
+
+    ```sh
+    $ aws ecr put-registry-scanning-configuration \
+        --scan-type BASIC \
+        --rules '[{"repositoryFilters" : [{"filter":"*","filterType" : "WILDCARD"}], "scanFrequency" : "SCAN_ON_PUSH"}]'
+    ```
