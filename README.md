@@ -68,8 +68,8 @@ Installation
     ```sh
     $ rain deploy \
         --params ProjectName=hpc-dev,VpcStackName=hpc-dev-vpc-private-subnets-with-gateway-endpoints \
-        aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateway-per-az.cfn.yml \
-        hpc-dev-vpc-public-subnets-with-nat-gateway-per-az
+        aws-cfn-vpc-for-slc/vpc-public-subnets-with-nat-gateways.cfn.yml \
+        hpc-dev-vpc-public-subnets-with-nat-gateways
     ```
 
 10. Deploy stacks for EFS. (optional)
