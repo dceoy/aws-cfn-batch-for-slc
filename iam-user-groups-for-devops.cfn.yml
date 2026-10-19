@@ -81,7 +81,6 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - lambda:Describe*
                   - lambda:List*
                 Resource: '*'
               - Effect: Allow
