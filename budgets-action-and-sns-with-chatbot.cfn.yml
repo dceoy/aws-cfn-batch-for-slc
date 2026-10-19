@@ -21,7 +21,7 @@ Parameters:
   BudgetNotificationThreshold:
     Description: Set the budget percentage threshold for notification.
     Type: Number
-    MinValue: 0
+    MinValue: 0.1
     MaxValue: 100
     Default: 50
   BudgetActionThreshold:
