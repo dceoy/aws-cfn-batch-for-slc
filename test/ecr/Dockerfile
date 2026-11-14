@@ -1,4 +1,6 @@
-FROM public.ecr.aws/ubuntu/ubuntu:latest
+# syntax=docker/dockerfile:1
+ARG DEBIAN_TAG=trixie-dev
+FROM dhi.io/debian-base:${DEBIAN_TAG}
 
 ADD https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip /tmp/awscli.zip
 ADD https://raw.githubusercontent.com/dceoy/s3-sync-entrypoint/main/s3-sync-entrypoint /usr/local/bin/s3-sync-entrypoint
